@@ -11,7 +11,8 @@ const protectRoute = async(req, res, next) => {
         if(!decoded){
             return res.status(401).json({ msg: 'Invalid token, authorization denied' });
         }
-        const user = await User.findById(decoded.userId).select("-password");
+        const user = await User.findById(decoded.userID).select("-password");
+        console.log("userID", user);
         if(!user) {
             return res.status(401).json({ msg: 'User not found, authorization denied' });
         }
