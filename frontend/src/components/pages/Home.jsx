@@ -24,11 +24,11 @@ const HomePage = () => {
       A powerful, lightweight serum made for men. Hydrates, smooths, and energizes your skin—without the fuss.
     </p>
 
-    <ul className="text-sm md:text-base text-gray-300 mb-8 space-y-1">
+    {/* <ul className="text-sm md:text-base text-gray-300 mb-8 space-y-1">
       <li>✔️ Lightweight & non-greasy formula</li>
       <li>✔️ Fights dullness, dryness, and fatigue</li>
       <li>✔️ Clean ingredients. Fast results.</li>
-    </ul>
+    </ul> */}
 
     <a
       href="#"
@@ -39,8 +39,10 @@ const HomePage = () => {
   </div>
  
 </section>
- <main className="min-h-screen">
+ <main className="min-h-screen mt-16">
+  <div className="bg-gray-100 p-6">
     <MainCards />
+    </div>
   </main>
 </>
 

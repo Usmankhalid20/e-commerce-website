@@ -8,6 +8,10 @@ import { useAuth } from "./components/context/AuthContext";
 import { Loader } from "lucide-react";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
+import Shop from "./components/pages/Shop";
+import ProductPage from "./components/pages/ProductPage";
+import About from "./components/pages/About";
+import Contact from "./components/pages/Contact";
 
 const App = () => {
   const {authUser, checkAuth, isCheckingAuth} = useAuth();
@@ -31,6 +35,10 @@ const App = () => {
         <Route path="/signup" element={!authUser ? <SignUp /> : <Navigate to="/" />} />
         <Route path="/login" element={!authUser ?<Login /> : <Navigate to="/" />} />
         <Route path="/" element={authUser ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/shop" element={ <Shop />} />
+        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/contact" element={<Contact />} />
       </Route>
     </Routes>
     </div>
