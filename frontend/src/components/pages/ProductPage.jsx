@@ -5,14 +5,14 @@ import { useAuth } from "../context/AuthContext"; // your Zustand store
 import React from "react";
 import { Plus } from "lucide-react";
 import { Minus } from "lucide-react";
-import { useState } from "react";
+import toast from "react-hot-toast";
 
 const ProductPage = () => {
   const { id } = useParams();
   const product = cardData.find((p) => p.id.toString() === id);
   const addToCart = useAuth((state) => state.addToCart);
-  // const [count, setCount] = useState(1);
-  const [quantity, setQuantity] = useState(1)
+
+  const { quantity, increment, decrement, resetQuantity } = useAuth();
   if (!product) {
     return (
       <div className="text-center py-10 text-red-500">Product not found</div>
@@ -20,27 +20,15 @@ const ProductPage = () => {
   }
 
   const handleAddToCart = () => {
-    try {
-      addToCart(product);
-      alert("Added to cart ✅");
-    } catch (error) {
-      console.error("Add to cart error:", error);
+    if (product.inStock && quantity > 0) {  
+    addToCart(product, quantity); 
+    resetQuantity();              
+    toast.success("Item added to cart"); 
+    } else {
+      toast.error("Out of Stock")
     }
   };
 
-  //  count
-  const increament = () => {
-    if(quantity < product.inStock){
-      setQuantity((pre) => pre + 1);
-    }
-    
-  };
-
-  const decreament = () => {
-    if (quantity > 1) {
-      setQuantity((pre) => pre - 1);
-    }
-  };
   const discount = Math.round(
     ((product.mrp - product.price) / product.mrp) * 100
   );
@@ -139,40 +127,45 @@ const ProductPage = () => {
 
           {/* count Status */}
           <div className="flex items-center gap-4">
-  {/* Stock Status Badge */}
-  <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-    product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-  }`}>
-    {product.inStock ? 'In Stock' : 'Out of Stock'}
-  </div>
+            {/* Stock Status Badge */}
+            <div
+              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                product.inStock
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
+              }`}
+            >
+              {product.inStock ? "In Stock" : "Out of Stock"}
+            </div>
 
-  {/* Quantity Selector */}
-  <div className="inline-flex items-center rounded-full border border-gray-200 bg-white overflow-hidden">
-    <button 
-      onClick={decreament}
-      className="px-3 py-1 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-    >
-      <Minus className="h-4 w-4" />
-    </button>
-    
-    <span className="px-3 py-1 text-sm font-medium text-gray-700 border-x border-gray-200">
-      {quantity}
-    </span>
-    
-    <button 
-      onClick={increament}
-      className="px-3 py-1 text-gray-600 hover:bg-gray-50 disabled:opacity-50  transition-colors"
-    >
-      <Plus className="h-4 w-4" />
-    </button>
-  </div>
-</div>
+            {/* Quantity Selector */}
+            <div className="inline-flex items-center rounded-full border border-gray-200 bg-white overflow-hidden">
+              <button
+                onClick={() => decrement(product.inStock)}
+                className="px-3 py-1 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <Minus className="h-4 w-4" />
+              </button>
+
+              <span className="px-3 py-1 text-sm font-medium text-gray-700 border-x border-gray-200">
+                {quantity}
+              </span>
+
+              <button
+                onClick={() => increment(product.inStock)}
+                className="px-3 py-1 text-gray-600 hover:bg-gray-50 disabled:opacity-50  transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
 
           {/* Add to Cart */}
           <div className="pt-4">
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
+
               className={`w-full md:w-auto px-8 py-3 rounded-lg font-medium text-white transition-all duration-200 ${
                 product.inStock
                   ? "bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"

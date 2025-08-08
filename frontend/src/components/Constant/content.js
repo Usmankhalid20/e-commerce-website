@@ -8,7 +8,7 @@ export const cardData = [
     price: 899,
     mrp: 1199,
     category: "Hydration",
-    inStock: 10,
+    inStock: 5,
     rating: 4.5,
     reviews: 182
   },
@@ -21,7 +21,7 @@ export const cardData = [
     price: 799,
     mrp: 999,
     category: "Oil-Control",
-    inStock: 20,
+    inStock: 10,
     rating: 4.2,
     reviews: 147
   },
@@ -34,7 +34,7 @@ export const cardData = [
     price: 1099,
     mrp: 1399,
     category: "Anti-Aging",
-    inStock: 20,
+    inStock: 15,
     rating: 4.7,
     reviews: 221
   },

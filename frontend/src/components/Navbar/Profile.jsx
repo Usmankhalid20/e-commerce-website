@@ -18,14 +18,14 @@ const UserDropdown = () => {
   }, []);
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
+    <div className="relative inline-block text-center " ref={dropdownRef}>
       {/* Avatar Button */}
       <img
         onClick={() => setIsOpen(!isOpen)}
         id="avatarButton"
         type="button"
         className="w-10 h-10 rounded-full cursor-pointer"
-        src="/docs/images/people/profile-picture-5.jpg"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF_xXMYRNugAnQWuh9DIUNNC6SwVDuYHJTqQ&s"
         alt="User dropdown"
       />
 
@@ -33,7 +33,7 @@ const UserDropdown = () => {
       {isOpen && (
         <div
           id="userDropdown"
-          className="absolute z-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600"
+          className="absolute z-10 mt-2  bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600"
         >
           <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
             <div>Bonnie Green</div>

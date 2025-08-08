@@ -12,6 +12,7 @@ import Shop from "./components/pages/Shop";
 import ProductPage from "./components/pages/ProductPage";
 import About from "./components/pages/About";
 import Contact from "./components/pages/Contact";
+// import Cart from "./components/pages/Cart";
 
 const App = () => {
   const {authUser, checkAuth, isCheckingAuth} = useAuth();
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/shop" element={ <Shop />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/contact" element={<Contact />} />
+        {/* <Route path="/cart" element={<Cart />} /> */}
       </Route>
     </Routes>
     </div>

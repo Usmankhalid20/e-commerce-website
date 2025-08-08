@@ -9,6 +9,7 @@ export const useAuth = create((set) => ({
   isSigninIn: false,
   isCheckingAuth: true,
   cart: [],
+  quantity: 1,
 
   checkAuth: async () => {
     try {
@@ -52,13 +53,40 @@ export const useAuth = create((set) => ({
   },
   addToCart: (product, quantity) =>
     set((state) => {
-      const alreadyInCart = state.cart.find((item) => item.id === product.id);
-      if (alreadyInCart) return state;
-      return { cart: [...state.cart, product, quantity] };
+      const existingItem = state.cart.find((item) => item.id === product.id);
+      if (existingItem) {
+        // update quantity if already exists
+        return {
+          cart: state.cart.map((item) =>
+            item.id === product.id
+              ? { ...item, quantity: item.quantity + quantity }
+              : item
+          ),
+        };
+      }
+      // if new item
+      return {
+        cart: [...state.cart, { ...product, quantity }],
+      };
     }),
   removeFromCart: (id) =>
     set((state) => ({
       cart: state.cart.filter((item) => item.id !== id),
     })),
+
+    increment: (inStock) =>
+    set((state) => ({
+      quantity: state.quantity < inStock ? state.quantity + 1 : state.quantity,
+    })),
+
+  decrement: () =>
+    set((state) => ({
+      quantity: state.quantity > 1 ? state.quantity - 1 : 1,
+    })),
+
+  setQuantity: (qty) => set({ quantity: qty }),
+
+  resetQuantity: () => set({ quantity: 1 }),
+
 
 }));
