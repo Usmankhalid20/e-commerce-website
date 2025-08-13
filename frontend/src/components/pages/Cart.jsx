@@ -1,93 +1,97 @@
-// import React from "react";
-// import { RxCross2 } from "react-icons/rx";
-// import { useAuth } from "../context/AuthContext";
-// import { Link } from "react-router-dom";
+import React from "react";
+import { useAuth } from "../context/AuthContext";
+import { RxCross2 } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
-// const Cart = ({ isCartOpen, setIsCartOpen }) => {
-//   const { cart, removeFromCart } = useAuth();
+const Cart = () => {
+  const { cart, removeFromCart } = useAuth();
 
-//   // Subtotal Calculation
-//   const subtotal = cart.reduce(
-//     (acc, item) => acc + item.price * item.quantity,
-//     0
-//   );
+  // Subtotal Calculation
+  const subtotal = cart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
 
-//   return (
-//     <>
-//       {/* Overlay */}
-//       <div
-//         className={`fixed inset-0 bg-black/30 z-40 transition-opacity duration-300 ${
-//           isCartOpen ? "opacity-100 visible" : "opacity-0 invisible"
-//         }`}
-//         onClick={() => setIsCartOpen(false)}
-//       />
+  return (
+    <div className="w-full min-h-screen py-4 px-2 sm:px-4">
+      <div className="max-w-7xl bg-white min-h-[70vh] mt-20 px-4 sm:px-8 py-6 mx-auto rounded-lg shadow-md">
+        <h1 className="text-lg sm:text-xl font-bold mb-4">Cart</h1>
 
-//       {/* Cart Drawer */}
-//       <div
-//         className={`fixed top-0 right-0 w-full sm:w-[400px] h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-//           isCartOpen ? "translate-x-0" : "translate-x-full"
-//         }`}
-//       >
-//         {/* Header */}
-//         <div className="flex justify-between items-center p-4 border-b">
-//           <h2 className="text-xl font-semibold">Shopping Cart</h2>
-//           <RxCross2
-//             className="text-2xl cursor-pointer hover:text-red-500"
-//             onClick={() => setIsCartOpen(false)}
-//           />
-//         </div>
+        {cart.length === 0 ? (
+          <p className="text-center text-gray-500">Your cart is empty</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300 text-sm sm:text-base">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-2 sm:px-4 py-2">Image</th>
+                  <th className="px-2 sm:px-4 py-2">Product</th>
+                  <th className="px-2 sm:px-4 py-2">Price</th>
+                  <th className="px-2 sm:px-4 py-2">Quantity</th>
+                  <th className="px-2 sm:px-4 py-2">Total</th>
+                  <th className="px-2 sm:px-4 py-2">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cart.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="text-center border border-gray-300"
+                  >
+                    <td className="px-2 sm:px-4 py-2">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-12 h-12 sm:w-16 sm:h-16 object-cover mx-auto rounded"
+                      />
+                    </td>
+                    <td className="px-2 sm:px-4 py-2">{item.title}</td>
+                    <td className="px-2 sm:px-4 py-2">${item.price.toFixed(2)}</td>
+                    <td className="px-2 sm:px-4 py-2">{item.quantity}</td>
+                    <td className="px-2 sm:px-4 py-2">
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </td>
+                    <td className="px-2 sm:px-4 py-2">
+                      <RxCross2
+                        className="text-lg sm:text-xl text-red-500 cursor-pointer hover:text-red-700 mx-auto"
+                        onClick={() => removeFromCart(item.id)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-//         {/* Cart Items */}
-//         <div className="p-4 space-y-4 overflow-y-auto h-[calc(100%-150px)]">
-//           {cart.length === 0 ? (
-//             <p className="text-center text-gray-500">Your cart is empty</p>
-//           ) : (
-//             cart.map((item) => (
-//               <div className="flex gap-4 items-center" key={item.id}>
-//                 <div className="w-20 h-20 overflow-hidden rounded-md border">
-//                   <img
-//                     src={item.image}
-//                     alt={item.title}
-//                     className="w-full h-full object-cover"
-//                   />
-//                 </div>
-//                 <div className="flex-1">
-//                   <h1 className="text-md font-medium">{item.title}</h1>
-//                   <p className="text-sm text-gray-600">
-//                     ${item.price} × {item.quantity}
-//                   </p>
-//                 </div>
-//                 <RxCross2
-//                   className="text-xl text-red-500 cursor-pointer hover:text-red-700"
-//                   onClick={() => removeFromCart(item.id)}
-//                 />
-//               </div>
-//             ))
-//           )}
-//         </div>
+            {/* Subtotal Section */}
+            <div className="w-full flex flex-col sm:flex-row sm:justify-end mt-8 px-0 sm:px-4">
+              <div className="w-full sm:w-96 text-black rounded-lg shadow-lg p-4 sm:p-6 bg-gray-50">
+                {/* Cart Heading */}
+                <h1 className="text-lg sm:text-2xl font-bold border-b border-gray-300 pb-2 mb-4">
+                  Cart Summary
+                </h1>
 
-//         {/* Footer */}
-//         <div className="p-4 border-t">
-//           <div className="flex justify-between font-semibold mb-4">
-//             <span>Subtotal:</span>
-//             <span>${subtotal.toFixed(2)}</span>
-//           </div>
-//           <div className="flex gap-2">
-//             <Link
-//               to="/cart"
-//               className="flex-1 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-center text-sm font-medium"
-//               onClick={() => setIsCartOpen(false)}
-//             >
-//               View Cart
-//             </Link>
-//             <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium">
-//               Checkout
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
+                {/* Subtotal */}
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-base sm:text-lg font-medium">Subtotal:</span>
+                  <span className="text-lg sm:text-xl font-bold">
+                    ${subtotal.toFixed(2)}
+                  </span>
+                </div>
 
-// export default Cart;
+                {/* Buy Now Button */}
+                <Link
+                  to="/checkout"
+                  className="block w-full text-center bg-green-400 hover:bg-green-500 text-black hover:text-white font-semibold py-3 rounded-lg shadow-md transition-all duration-300"
+                >
+                  Buy Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Cart;

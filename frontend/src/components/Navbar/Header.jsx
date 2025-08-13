@@ -47,6 +47,7 @@ const Header = () => {
             </button>
 
             <Link to="/login" className="hover:text-blue-600">Login</Link>
+            <Link to="/admin" className="hover:text-blue-600">Admin</Link>
           </nav>
 
           {/* Mobile Hamburger */}

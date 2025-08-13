@@ -81,7 +81,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
               View ShoppingCart
             </Link>
             <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium">
-              Checkout
+              <Link to="/checkout">Checkout</Link>
             </button>
           </div>
         </div>

@@ -88,4 +88,30 @@ const checkAuth = (req, res) => {
   }
 };
 
-module.exports = { signUp, Login, checkAuth };
+const Logout = (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/", // important to match cookie path
+    });
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Logout failed",
+      error: error.message,
+    });
+  }
+};
+
+
+const dashboard = (req, res) => {
+  try {
+    res.json({ message: "Welcome Admin" });
+  } catch (error) {
+    console.log("Error in admin only controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+module.exports = { signUp, Login, checkAuth, dashboard, Logout };
