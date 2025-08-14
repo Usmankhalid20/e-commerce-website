@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiHome, FiUsers, FiSettings, FiMenu } from "react-icons/fi";
+import { FiHome, FiUsers, FiMenu } from "react-icons/fi";
+import { FaListUl  } from "react-icons/fa";
+import { LiaFirstOrder } from "react-icons/lia";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
@@ -29,18 +31,26 @@ export default function Sidebar() {
           <FiHome /> <span className={`${isOpen ? "block" : "hidden"}`}>Home</span>
         </Link>
         <Link
-          to="/users"
+          to="/admin/users"
           className="flex items-center gap-3 px-4 py-2 hover:bg-gray-700"
         >
           <FiUsers /> <span className={`${isOpen ? "block" : "hidden"}`}>Users</span>
         </Link>
-        <Link
-          to="/settings"
+
+           <Link
+          to="/"
           className="flex items-center gap-3 px-4 py-2 hover:bg-gray-700"
         >
-          <FiSettings />{" "}
-          <span className={`${isOpen ? "block" : "hidden"}`}>Settings</span>
+          <FaListUl /> <span className={`${isOpen ? "block" : "hidden"}`}>Listing</span>
         </Link>
+        
+        <Link
+          to="/"
+          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-700"
+        >
+          <LiaFirstOrder /> <span className={`${isOpen ? "block" : "hidden"}`}>Orders</span>
+        </Link>
+
       </nav>
     </div>
   );

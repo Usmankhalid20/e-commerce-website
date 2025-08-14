@@ -14,13 +14,13 @@ import About from "./components/pages/About";
 import Contact from "./components/pages/Contact";
 import Cart from "./components/pages/Cart";
 import CheckOut from "./components/pages/CheckOut";
-import AdminRoute from "./components/AdminPages/Dashboard/AdminRoute";
 import AdminDashboard from "./components/AdminPages/Dashboard/AdminDashboard";
-import LayoutAdmin from "./components/AdminPages/pages/Admin_page/AdminNavbar";
-import AdminNavbar from "./components/AdminPages/pages/Admin_page/AdminNavbar";
+import LayoutAdmin from "./components/AdminPages/pages/Admin_page/LayoutAdmin";
+import ProtectedRoute from "./components/lib/AdminRoute";
+import UserPage from "./components/AdminPages/components/UserPage";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth, role } = useAuth();
+  const { authUser, checkAuth, isCheckingAuth } = useAuth();
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
@@ -37,6 +37,7 @@ const App = () => {
     <div>
       <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       <Routes>
+        {/* Public Routes */}
         <Route
           path="/signup"
           element={!authUser ? <SignUp /> : <Navigate to="/" />}
@@ -45,7 +46,15 @@ const App = () => {
           path="/login"
           element={!authUser ? <Login /> : <Navigate to="/" />}
         />
-        <Route element={  <LayoutUser /> }>
+
+        {/* Protected User Routes */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <LayoutUser />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/shop" element={<Shop />} />
@@ -53,20 +62,24 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<CheckOut />} />
-          {/* Admin Routes */}
-          <Route
-            path="/admin"
-            element={
-              <>
-                <LayoutAdmin />
-                <AdminRoute>
-                  <AdminDashboard />
-                </AdminRoute>
-              </>
-            }
-          />
         </Route>
-      </Routes>
+  </Routes>
+
+  <Routes>
+    {/* Admin Routes */}
+      <Route
+          path="/admin" // Add this path
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <LayoutAdmin />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<UserPage />} />
+          
+       </Route>
+  </Routes>
     </div>
   );
 };

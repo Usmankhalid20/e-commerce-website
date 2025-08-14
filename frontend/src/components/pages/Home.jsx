@@ -50,7 +50,7 @@ const HomePage = () => {
   </div>
 
   {/* Tailwind animations */}
-  <style jsx>{`
+  <style >{`
     .animate-fadeIn {
       animation: fadeIn 1.2s ease-in-out forwards;
     }

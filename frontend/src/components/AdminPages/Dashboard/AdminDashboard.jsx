@@ -1,9 +1,8 @@
 import React from "react";
 import Sidebar from "./Sidebar";
-import Header from "../pages/Admin_page/AdminNavbar";
-import Authentication from './Authentication'
+import Authentication from "./Authentication";
 
-export default function App() {
+export default function AdminDashboard() {
   return (
     <div className="flex">
       <Sidebar />

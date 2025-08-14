@@ -18,11 +18,10 @@ const Login = () => {
     const userData = await Login({ email, password });
     if (userData?.user?.role === "admin") {
       navigate("/admin");
-    } else if(userData?.user?.role === "user") {
-      navigate("/");
     } else {
-      alert("Invalid credentials");
-      }
+      navigate("/");
+    } 
+    
   };
 
   return (

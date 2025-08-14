@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-export default function AdminDashboard() {
+export default function Authentication() {
   // ALL HOOKS MUST BE CALLED FIRST - NEVER CONDITIONALLY!
   const { authUser, role, Dashboard, isCheckingAuth } = useAuth();
   const [message, setMessage] = useState("");
