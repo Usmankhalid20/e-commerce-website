@@ -14,10 +14,12 @@ import About from "./components/pages/About";
 import Contact from "./components/pages/Contact";
 import Cart from "./components/pages/Cart";
 import CheckOut from "./components/pages/CheckOut";
-import AdminDashboard from "./components/AdminPages/Dashboard/AdminDashboard";
+import AdminHome from "./components/AdminPages/Dashboard/AdminHome";
 import LayoutAdmin from "./components/AdminPages/pages/Admin_page/LayoutAdmin";
 import ProtectedRoute from "./components/lib/AdminRoute";
 import UserPage from "./components/AdminPages/components/UserPage";
+import ListingPage from "./components/AdminPages/components/ListingPage";
+import OrdersPage from "./components/AdminPages/components/OrdersPage";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuth();
@@ -34,9 +36,9 @@ const App = () => {
   }
 
   return (
-    <div>
+  <div>
       <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
-      <Routes>
+    <Routes>
         {/* Public Routes */}
         <Route
           path="/signup"
@@ -48,7 +50,7 @@ const App = () => {
         />
 
         {/* Protected User Routes */}
-        <Route
+       <Route
           element={
             <ProtectedRoute>
               <LayoutUser />
@@ -63,9 +65,7 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<CheckOut />} />
         </Route>
-  </Routes>
-
-  <Routes>
+ 
     {/* Admin Routes */}
       <Route
           path="/admin" // Add this path
@@ -75,8 +75,10 @@ const App = () => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<AdminDashboard />} />
+          <Route index element={<AdminHome />} />
           <Route path="users" element={<UserPage />} />
+          <Route path="listing" element={<ListingPage />} />
+          <Route path="orders" element={<OrdersPage />} />
           
        </Route>
   </Routes>

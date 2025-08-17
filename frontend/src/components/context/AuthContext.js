@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 
 export const useAuth = create((set) => ({
   authUser: null,
+  users: [],
   isSigningUp: false,
   isSigninIn: false,
   isCheckingAuth: true,
@@ -67,7 +68,24 @@ export const useAuth = create((set) => ({
       set({ isSigninIn: false });
     }
   },
-  
+  // getUsers: async() => {
+  //   set({ isCheckingAuth: true });
+  //   try {
+  //     const res = await axiosInstance.get("auth/getusers");
+  //     // set({users: res.data});
+  //     return res.data;
+  //     console.log("Users fetched successfully:", res.data);
+  //     toast.success("Users fetched successfully");
+
+  //   } catch (error) {
+  //     console.log("Error in getUsers:", error);
+  //     toast.error("Error fetching users");
+  //   }
+  //   finally {
+  //     set({ isCheckingAuth: false });
+  //   }
+  // },
+
   Logout: async () => {
     set({ isLoggingOut: true });
     try {
@@ -81,8 +99,7 @@ export const useAuth = create((set) => ({
     } finally {
       set({ isLoggingOut: false });
     }
-  }
-  ,
+  },
 
   addToCart: (product, quantity) =>
     set((state) => {
@@ -121,19 +138,6 @@ export const useAuth = create((set) => ({
 
   resetQuantity: () => set({ quantity: 1 }),
 
-
-  Dashboard: async () => {
-  try {
-    const res = await axiosInstance.get("auth/dashboard");
-    // console.log(res.data, "dashboard response");
-
-    toast.success(res.data.message || "Welcome Admin");
-    return res.data;
-  } catch (error) {
-    console.log("Error in Dashboard:", error);
-    toast.error(error.response?.data?.message || "Error fetching dashboard");
-  }
-},
 
 
 }));

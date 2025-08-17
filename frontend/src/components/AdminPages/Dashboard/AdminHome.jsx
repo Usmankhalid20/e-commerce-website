@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
 export default function Authentication() {
   // ALL HOOKS MUST BE CALLED FIRST - NEVER CONDITIONALLY!
-  const { authUser, role, Dashboard, isCheckingAuth } = useAuth();
+  const { authUser, role, isCheckingAuth } = useAuth();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -17,27 +18,36 @@ export default function Authentication() {
   }, [isCheckingAuth]);
 
   useEffect(() => {
-    if (role === "admin" && authUser && !isCheckingAuth) {
-      const fetchData = async () => {
-        try {
-          console.log("Fetching admin dashboard data...");
-          const res = await Dashboard();
-          console.log("Dashboard response:", res);
-          
-          if (res?.message) {
-            setMessage(res.message);
-          } else {
-            setMessage("Welcome to Admin Dashboard");
-          }
-        } catch (error) {
-          console.error("Error fetching dashboard data:", error);
-          setMessage("Error loading dashboard data");
+  if (role === "admin" && authUser && !isCheckingAuth) {
+    const fetchData = async () => {
+      try {
+        console.log("Fetching admin dashboard data...");
+
+        const token = localStorage.getItem("token"); // 👈 from login
+        const res = await axios.get("http://localhost:5000/api/auth/getusers", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true, 
+        });
+
+        console.log("Dashboard response:", res.data);
+
+        if (res.data?.message) {
+          setMessage(res.data.message);
+        } else {
+          setMessage("Welcome to Admin Dashboard");
         }
-      };
-      
-      fetchData();
-    }
-  }, [Dashboard, role, authUser, isCheckingAuth]);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error.response?.data || error);
+        setMessage("Error loading dashboard data");
+      }
+    };
+
+    fetchData();
+  }
+}, [role, authUser, isCheckingAuth]);
+
 
   // NOW we can do conditional rendering AFTER all hooks are called
   if (isLoading || isCheckingAuth) {

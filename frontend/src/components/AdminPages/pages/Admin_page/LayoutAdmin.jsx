@@ -1,16 +1,25 @@
-import React from 'react'
-import AdminNavbar from './AdminNavbar'
-import { Outlet } from 'react-router-dom'
-import Footer from './Footer'
+import React from "react";
+import AdminNavbar from "./AdminNavbar";
+import { Outlet } from "react-router-dom";
+import Sidebar from "../../Dashboard/Sidebar";
 
 const Layout = () => {
   return (
-    <div>
+    <div className="flex flex-col h-screen">
+      {/* Top Navbar */}
       <AdminNavbar />
-      <Outlet />
-      <Footer />
-    </div>
-  )
-}
 
-export default Layout
+      <div className="flex flex-1">
+        {/* Sidebar on the left */}
+        <Sidebar />
+
+        {/* Main content area */}
+        <main className="flex-1 p-4 overflow-y-auto">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default Layout;

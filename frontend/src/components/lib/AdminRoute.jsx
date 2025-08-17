@@ -5,11 +5,11 @@ export default function ProtectedRoute({ children, requiredRole }) {
   const { authUser, role, isCheckingAuth } = useAuth();
   
   // ADD THESE DEBUG LOGS
-  console.log('🔐 ProtectedRoute Debug:');
-  console.log('authUser:', authUser);
-  console.log('role:', role);
-  console.log('requiredRole:', requiredRole);
-  console.log('isCheckingAuth:', isCheckingAuth);
+  // console.log('🔐 ProtectedRoute Debug:');
+  // console.log('authUser:', authUser);
+  // console.log('role:', role);
+  // console.log('requiredRole:', requiredRole);
+  // console.log('isCheckingAuth:', isCheckingAuth);
   
   if (isCheckingAuth) return <div>Loading...</div>;
   

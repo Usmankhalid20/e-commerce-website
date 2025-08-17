@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Edit3, Trash2, Eye, Filter, MoreVertical, UserPlus, Download, Mail, Phone, MapPin, Calendar, Shield, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import Sidebar from '../Dashboard/Sidebar';
+// import { useAuth } from '../../context/AuthContext';
+import axios from 'axios';
 
 export default function UserPage() {
   const [users, setUsers] = useState([]);
@@ -11,73 +13,44 @@ export default function UserPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  // const { getUsers } = useAuth();
 
-  // Mock user data
-  useEffect(() => {
-    const mockUsers = [
-      {
-        id: 1,
-        name: "John Doe",
-        email: "john@example.com",
-        phone: "+1 234-567-8901",
-        role: "admin",
-        status: "active",
-        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face",
-        location: "New York, USA",
-        joinDate: "2023-01-15",
-        lastLogin: "2024-08-14"
+  // user data
+ useEffect(() => {
+    fetchUsers();  }
+    , []);
+
+  // const fetchUsers = async () => {
+  //   try {
+  //     const res = await axios.get('http://localhost:5000/api/auth/getusers');
+  //     const data = Array.isArray(res.data) ? res.data : [];
+  //     console.log('Fetched users:', data);
+  //     setUsers(data);
+  //   } catch (err) {
+  //     console.error('Error fetching users:', err);
+  //     setUsers([]);
+  //   }
+
+  // };
+  const fetchUsers = async () => {
+  try {
+    const token = localStorage.getItem("token"); // 👈 get token
+
+    const res = await axios.get("http://localhost:5000/api/auth/getusers", {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-      {
-        id: 2,
-        name: "Sarah Wilson",
-        email: "sarah@example.com",
-        phone: "+1 234-567-8902",
-        role: "user",
-        status: "active",
-        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face",
-        location: "California, USA",
-        joinDate: "2023-03-22",
-        lastLogin: "2024-08-13"
-      },
-      {
-        id: 3,
-        name: "Mike Johnson",
-        email: "mike@example.com",
-        phone: "+1 234-567-8903",
-        role: "user",
-        status: "inactive",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face",
-        location: "Texas, USA",
-        joinDate: "2023-02-10",
-        lastLogin: "2024-07-20"
-      },
-      {
-        id: 4,
-        name: "Emily Brown",
-        email: "emily@example.com",
-        phone: "+1 234-567-8904",
-        role: "moderator",
-        status: "active",
-        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face",
-        location: "Florida, USA",
-        joinDate: "2023-04-05",
-        lastLogin: "2024-08-14"
-      },
-      {
-        id: 5,
-        name: "David Lee",
-        email: "david@example.com",
-        phone: "+1 234-567-8905",
-        role: "user",
-        status: "suspended",
-        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face",
-        location: "Washington, USA",
-        joinDate: "2023-06-12",
-        lastLogin: "2024-08-10"
-      }
-    ];
-    setUsers(mockUsers);
-  }, []);
+      withCredentials: true, // 👈 only if you also use cookies
+    });
+
+    const data = Array.isArray(res.data) ? res.data : [];
+    // console.log("Fetched users:", data);
+    setUsers(data);
+  } catch (err) {
+    console.error("Error fetching users:", err.response?.data || err);
+    setUsers([]);
+  }
+};
 
   // Filter users based on search and filters
   const filteredUsers = users.filter(user => {
@@ -88,7 +61,7 @@ export default function UserPage() {
     
     return matchesSearch && matchesRole && matchesStatus;
   });
-
+  // console.log("Filtered users:", filteredUsers);
   const handleSelectUser = (userId) => {
     setSelectedUsers(prev => 
       prev.includes(userId) 
@@ -132,12 +105,23 @@ export default function UserPage() {
     }
   };
 
+// useEffect(() => {
+//   const fetchUsers = async() => {
+//     try {
+//       const data = await getUsers();
+//       console.log(data, "Fetched users");
+//       setUsers(data || []);
+//     } catch (error) {
+//       console.error("Error fetching users:", error);
+//       setUsers([]);
+//     }
+//   };
+//   fetchUsers();
+// }, [users]); // ✅ run only once
+
   return (
      <>
-    <div className='flex'>
-        <Sidebar />
-        <div className="flex-1 flex flex-col min-h-screen bg-gray-100">
-                    <main className="flex-1">
+ 
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
@@ -295,14 +279,13 @@ export default function UserPage() {
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Login</th>
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={user._id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
                     <input
                       type="checkbox"
@@ -341,12 +324,7 @@ export default function UserPage() {
                       {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(user.status)}`}>
-                      {getStatusIcon(user.status)}
-                      {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
-                    </span>
-                  </td>
+                 
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <Calendar className="w-4 h-4" />
@@ -509,9 +487,7 @@ export default function UserPage() {
         </div>
       )}
     </div>
-        </main>
-        </div>
-    </div>
+       
    </>
   );
 }

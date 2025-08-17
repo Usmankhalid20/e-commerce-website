@@ -25,7 +25,7 @@ export default function Sidebar() {
 
       <nav className="mt-4">
         <Link
-          to="/"
+          to="/admin"
           className="flex items-center gap-3 px-4 py-2 hover:bg-gray-700"
         >
           <FiHome /> <span className={`${isOpen ? "block" : "hidden"}`}>Home</span>
@@ -38,14 +38,14 @@ export default function Sidebar() {
         </Link>
 
            <Link
-          to="/"
+          to="/admin/listing"
           className="flex items-center gap-3 px-4 py-2 hover:bg-gray-700"
         >
           <FaListUl /> <span className={`${isOpen ? "block" : "hidden"}`}>Listing</span>
         </Link>
         
         <Link
-          to="/"
+          to="/admin/orders"
           className="flex items-center gap-3 px-4 py-2 hover:bg-gray-700"
         >
           <LiaFirstOrder /> <span className={`${isOpen ? "block" : "hidden"}`}>Orders</span>
