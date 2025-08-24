@@ -7,7 +7,7 @@ const ProductCard = ({ product }) => {
       <figure>
         <img
           src={product.image}
-          alt={product.title}
+          // alt={product.title}
           className="w-full h-64 object-cover"
         />
       </figure>
@@ -20,10 +20,10 @@ const ProductCard = ({ product }) => {
         {/* Pricing */}
         <div className="flex items-center gap-3 mb-3">
           <span className="text-xl font-bold text-purple-700">
-            ₹{product.price}
+            RS {product.price}
           </span>
           <span className="text-sm line-through text-gray-400">
-            ₹{product.mrp}
+            RS {product.mrp}
           </span>
           <span className="text-sm text-green-600 font-medium">
             ({Math.round(((product.mrp - product.price) / product.mrp) * 100)}%
@@ -42,10 +42,10 @@ const ProductCard = ({ product }) => {
 
         {/* Button */}
         <Link
-          to={`/product/${product.id}`}
+          to={`/product/${product._id}`}
           className="block mt-4 bg-purple-600 text-white text-center py-2 rounded hover:bg-purple-700 transition"
         >
-          {product.buttonText}
+          Buy Now
         </Link>
       </div>
     </div>

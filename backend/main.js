@@ -2,17 +2,20 @@ const express = require('express')
 const app = express()
 const connectDB = require('./lib/connect');
 const dotenv = require('dotenv').config();
-const userRoutes = require('./Routes/UserRoute');
-const dashboardRoutes = require('./Routes/dashboardRoute');
+const userRoutes = require('./Routes/User.Route');
+const dashboardRoutes = require('./Routes/dashboard.Route');
 const cookieParser = require('cookie-parser');
 const cors = require("cors")
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ["http://localhost:5173", "http://localhost:5174"],
    credentials: true
 }));
+
+app.use("/uploads", express.static("uploads"));
 connectDB();
 app.use('/api/auth', userRoutes)
 app.use("/api/adminAuth", dashboardRoutes);

@@ -46,10 +46,10 @@ const Cart = () => {
                       />
                     </td>
                     <td className="px-2 sm:px-4 py-2">{item.title}</td>
-                    <td className="px-2 sm:px-4 py-2">${item.price.toFixed(2)}</td>
+                    <td className="px-2 sm:px-4 py-2">RS. {item.price.toFixed(2)}</td>
                     <td className="px-2 sm:px-4 py-2">{item.quantity}</td>
                     <td className="px-2 sm:px-4 py-2">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      RS. {(item.price * item.quantity).toFixed(2)}
                     </td>
                     <td className="px-2 sm:px-4 py-2">
                       <RxCross2
@@ -74,7 +74,7 @@ const Cart = () => {
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-base sm:text-lg font-medium">Subtotal:</span>
                   <span className="text-lg sm:text-xl font-bold">
-                    ${subtotal.toFixed(2)}
+                    RS. {subtotal.toFixed(2)}
                   </span>
                 </div>
 

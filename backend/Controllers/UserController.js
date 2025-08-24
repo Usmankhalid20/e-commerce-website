@@ -48,6 +48,7 @@ const signUp = async (req, res) => {
 
 const Login = async (req, res) => {
   const { email, password } = req.body;
+  console.log("req body", req.body)
   console.log("Login request received:", { email, password });
   try {
     if (!email || !password) {
@@ -57,11 +58,12 @@ const Login = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
+    console.log("Found user:", user);
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid || user.length === 0) {
+    if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid password" });
     }
     generateToken(user._id, res);

@@ -54,7 +54,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
                 <div className="flex-1">
                   <h1 className="text-md font-medium">{item.title}</h1>
                   <p className="text-sm text-gray-600">
-                    ${item.price} × {item.quantity}
+                    RS {item.price} × {item.quantity}
                   </p>
                 </div>
                 <RxCross2
@@ -70,7 +70,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
         <div className="p-4 border-t">
           <div className="flex justify-between font-semibold mb-4">
             <span>Subtotal:</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>RS. {subtotal.toFixed(2)}</span>
           </div>
           <div className="flex gap-2">
             <Link

@@ -1,8 +1,19 @@
 import React from "react";
-import { cardData } from "../Constant/content";
+// import { cardData } from "../Constant/content";
+import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import { useEffect  } from "react";
 
 const Shop = () => {
+  const { products, fetchProducts} = useAuth();
+
+useEffect(() => {
+  fetchProducts();
+}, [fetchProducts])
+
+if (!Array.isArray(products) || products.length === 0) {
+    return <p>No products available</p>;
+  };
   return (
     <>
       <div className="w-full relative bg-gradient-to-r h-80 text-center text-white overflow-hidden">
@@ -22,7 +33,7 @@ const Shop = () => {
       <div className="container mx-auto p-4 pt-6 md:p-6 lg:p">
         <div className="w-full px-4 py-10 bg-zinc-100">
           <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6 lg:gap-10">
-            {cardData.map((card, id) => (
+            {products.map((card, id) => (
               <div
                 key={id}
                 className="card bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
@@ -43,10 +54,10 @@ const Shop = () => {
                   {/* Pricing */}
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-xl font-bold text-purple-700">
-                      ₹{card.price}
+                      RS {card.price}
                     </span>
                     <span className="text-sm line-through text-gray-400">
-                      ₹{card.mrp}
+                      RS {card.mrp}
                     </span>
                     <span className="text-sm text-green-600 font-medium">
                       ({Math.round(((card.mrp - card.price) / card.mrp) * 100)}%
@@ -65,10 +76,10 @@ const Shop = () => {
 
                   {/* Button */}
                   <Link
-                    to={`/product/${card.id}`}
+                    to={`/product/${card._id}`}
                     className="block mt-4 bg-purple-600 text-white text-center py-2 rounded hover:bg-purple-700 transition"
                   >
-                    {card.buttonText}
+                    Buy Now
                   </Link>
                 </div>
               </div>

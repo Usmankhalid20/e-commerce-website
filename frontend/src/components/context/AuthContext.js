@@ -3,7 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
 
-export const useAuth = create((set) => ({
+export const useAuth = create((set, get) => ({
   authUser: null,
   users: [],
   isSigningUp: false,
@@ -13,6 +13,7 @@ export const useAuth = create((set) => ({
   cart: [],
   quantity: 1,
   role: null,
+  products: [],
   
 
   checkAuth: async () => {
@@ -138,6 +139,23 @@ export const useAuth = create((set) => ({
 
   resetQuantity: () => set({ quantity: 1 }),
 
+  // fetch products from backend
+  fetchProducts: async () => {
+    try {
+      const res = await axiosInstance.get("/adminAuth/products");
+      console.log(res, "products");
+      set({ products: res.data });   // store array in state
+      console.log("Products fetched successfully:", res.data);
+      toast.success("Products fetched successfully");
+    } catch (error) {
+      console.log("Error in fetching products:", error);
+      toast.error("Error fetching products");
+    }
+  },
 
+  getProductById: (id) => {
+    const { products } = get();
+    return products.find(product => product._id.toString() === id.toString());
+  },
 
 }));

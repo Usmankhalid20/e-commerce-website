@@ -1,18 +1,38 @@
 // src/pages/ProductPage.jsx
 import { useParams } from "react-router-dom";
-import { cardData } from "../Constant/content"; // make sure this file exports the array
+// import { cardData } from "../Constant/content"; // make sure this file exports the array
 import { useAuth } from "../context/AuthContext"; // your Zustand store
 import React from "react";
 import { Plus } from "lucide-react";
 import { Minus } from "lucide-react";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const ProductPage = () => {
-  const { id } = useParams();
-  const product = cardData.find((p) => p.id.toString() === id);
-  const addToCart = useAuth((state) => state.addToCart);
+   const { id } = useParams();
 
-  const { quantity, increment, decrement, resetQuantity } = useAuth();
+  // get state & actions from Zustand
+  const { 
+    products, 
+    fetchProducts, 
+    addToCart, 
+    quantity, 
+    increment, 
+    decrement, 
+    resetQuantity,
+    getProductById 
+  } = useAuth();
+
+  // fetch products if not already loaded
+  useEffect(() => {
+    if (!products || products.length === 0) {
+      fetchProducts();
+    }
+  }, [products, fetchProducts]);
+
+  // find product by id
+  const product = getProductById(id);
+
   if (!product) {
     return (
       <div className="text-center py-10 text-red-500">Product not found</div>
@@ -20,12 +40,12 @@ const ProductPage = () => {
   }
 
   const handleAddToCart = () => {
-    if (product.inStock && quantity > 0) {  
-    addToCart(product, quantity); 
-    resetQuantity();              
-    toast.success("Item added to cart"); 
+    if (product.inStock && quantity > 0) {
+      addToCart(product, quantity);
+      resetQuantity();
+      toast.success("Item added to cart");
     } else {
-      toast.error("Out of Stock")
+      toast.error("Out of Stock");
     }
   };
 
@@ -70,17 +90,17 @@ const ProductPage = () => {
           <div className="space-y-2">
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-bold text-purple-700">
-                ₹{product.price}
+                RS {product.price}
               </span>
               {product.mrp > product.price && (
                 <span className="text-lg line-through text-gray-400">
-                  ₹{product.mrp}
+                  RS {product.mrp}
                 </span>
               )}
             </div>
             {product.mrp > product.price && (
               <p className="text-sm text-green-600">
-                You save ₹{product.mrp - product.price} ({discount}%)
+                You save RS {product.mrp - product.price} ({discount}%)
               </p>
             )}
           </div>

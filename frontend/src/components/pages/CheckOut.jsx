@@ -154,7 +154,7 @@ const CheckOut = () => {
               {/* Total */}
               <div className="border-t pt-4 flex justify-between font-semibold">
                 <span>Total:</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>RS. {subtotal.toFixed(2)}</span>
               </div>
 
               {/* Place Order */}
@@ -197,7 +197,7 @@ const CheckOut = () => {
 
                     {/* Price */}
                     <div className="text-sm text-gray-800 font-semibold">
-                      ${item.price}
+                      RS. {item.price}
                     </div>
                   </div>
                 ))
@@ -208,7 +208,7 @@ const CheckOut = () => {
             <div className="p-4 border-t">
               <div className="flex justify-between font-semibold mb-4">
                 <span>Subtotal:</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>RS. {subtotal.toFixed(2)}</span>
               </div>
             </div>
           </div>
