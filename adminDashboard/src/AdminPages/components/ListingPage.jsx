@@ -37,7 +37,7 @@ const ListingPage = () => {
       formData.append("mrp", product.mrp);
       formData.append("category", product.category);
       formData.append("inStock", product.inStock);
-      formData.append("image", product.image); // 👈 file from input
+      formData.append("productImage", product.image); // 👈 file from input
 
       const response = await fetch(
         "http://localhost:5000/api/adminAuth/listing",

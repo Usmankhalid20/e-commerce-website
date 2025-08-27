@@ -14,12 +14,14 @@ const Login = () => {
   const handleSubmit = async (e) => {
   e.preventDefault();
   console.log("Login page");
-  await Login({ email, password }); // must be an object with keys "email" and "password"
-
-};
-
-
-
+  try {
+      await Login({ email, password, role }); // ✅ include role if your backend supports it
+      navigate("/"); // ✅ redirect after login
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
+  }; 
+  
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

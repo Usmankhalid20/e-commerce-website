@@ -15,6 +15,7 @@ import Contact from "./components/pages/Contact";
 import Cart from "./components/pages/Cart";
 import CheckOut from "./components/pages/CheckOut";
 import ProtectedRoute from "./components/lib/ProtectedRoute";
+import ProfileUpdate from "./components/Navbar/ProfileUpdate";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuth();
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/profileUpdate" element={<ProfileUpdate />} />
         </Route>
  
     

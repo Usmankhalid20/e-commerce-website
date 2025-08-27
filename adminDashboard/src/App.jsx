@@ -11,7 +11,7 @@ import { Loader } from "lucide-react";
 import { useEffect } from 'react';
 import SignUp from './AdminPages/pages/SignUp';
 import Login from './AdminPages/pages/Login';
-import Unauthorized from './AdminPages/pages/unauthorized/Unauthorized';
+import Unauthorized from './AdminPages/pages/auth/Unauthorized';
 // import { Toaster } from "react-hot-toast";
 
 
@@ -41,7 +41,7 @@ function App() {
           element={!authUser ? <Login /> : <Navigate to="/" />}
         />
       {/* Admin Routes */}
-      <Route
+       <Route
           path="/" // Add this path
           element={
             <ProtectedRoute requiredRole="admin">
@@ -55,7 +55,7 @@ function App() {
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
        </Route>
-       </Routes>
+      </Routes>
     </>
   )
 }

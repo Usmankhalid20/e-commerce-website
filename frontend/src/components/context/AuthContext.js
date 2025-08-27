@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { axiosInstance } from "../lib/axios";
+import  axiosInstance  from "../lib/axios";
 import toast from "react-hot-toast";
 
 
@@ -48,10 +48,11 @@ export const useAuth = create((set, get) => ({
       set({ isSigningUp: false });
     }
   },
+
   Login: async (data) => {
     set({ isSigninIn: true });
     try {
-      const res = await axiosInstance.post("auth/login", data);
+      const res = await axiosInstance.post("/auth/login", data);
       console.log(res, "login");
       set({ 
         authUser: res.data,
@@ -69,6 +70,7 @@ export const useAuth = create((set, get) => ({
       set({ isSigninIn: false });
     }
   },
+
   // getUsers: async() => {
   //   set({ isCheckingAuth: true });
   //   try {
@@ -119,7 +121,8 @@ export const useAuth = create((set, get) => ({
       return {
         cart: [...state.cart, { ...product, quantity }],
       };
-    }),
+}),
+
   removeFromCart: (id) =>
     set((state) => ({
       cart: state.cart.filter((item) => item.id !== id),
@@ -128,12 +131,12 @@ export const useAuth = create((set, get) => ({
     increment: (inStock) =>
     set((state) => ({
       quantity: state.quantity < inStock ? state.quantity + 1 : state.quantity,
-    })),
+})),
 
   decrement: () =>
     set((state) => ({
       quantity: state.quantity > 1 ? state.quantity - 1 : 1,
-    })),
+ })),
 
   setQuantity: (qty) => set({ quantity: qty }),
 
@@ -156,6 +159,23 @@ export const useAuth = create((set, get) => ({
   getProductById: (id) => {
     const { products } = get();
     return products.find(product => product._id.toString() === id.toString());
+  },
+
+  updatedUserProfile: async(updateUser) => {
+    try {
+      const userId = get().authUser._id;
+      console.log("User ID:", userId);
+       const res = await axiosInstance.put(`/auth/updateProfile/${userId}`, updateUser);
+    console.log("API Response:", res);
+    
+    set({ authUser: res.data });
+    toast.success("Profile Updated Successfully");
+    
+    // return res.data;
+    } catch (error) {
+      console.log("Error in updating profile:", error);
+      toast.error("Error in updating profile");
+    }
   },
 
 }));

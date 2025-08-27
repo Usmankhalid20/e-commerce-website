@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { FaCartShopping } from "react-icons/fa6";
 import ShoppingCart from "../pages/ShoppingCart";
 import { useAuth } from "../context/AuthContext";
+import Profile from "../Navbar/Profile";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,10 +28,18 @@ const Header = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-6 font-medium items-center">
-            <Link to="/" className="hover:text-blue-600">Home</Link>
-            <Link to="/shop" className="hover:text-blue-600">Shop</Link>
-            <Link to="/about" className="hover:text-blue-600">About</Link>
-            <Link to="/contact" className="hover:text-blue-600">Contact</Link>
+            <Link to="/" className="hover:text-blue-600">
+              Home
+            </Link>
+            <Link to="/shop" className="hover:text-blue-600">
+              Shop
+            </Link>
+            <Link to="/about" className="hover:text-blue-600">
+              About
+            </Link>
+            <Link to="/contact" className="hover:text-blue-600">
+              Contact
+            </Link>
 
             {/* Cart Icon */}
             <button
@@ -45,9 +54,14 @@ const Header = () => {
                 </span>
               )}
             </button>
-
-            <Link to="/login" className="hover:text-blue-600">Login</Link>
-            <Link to="/admin" className="hover:text-blue-600">Admin</Link>
+              <div>
+                {" "}
+                {/* Change button to div */}
+                <Profile className="text-2xl" />
+              </div>
+            
+            {/* <Link to="/login" className="hover:text-blue-600">Login</Link>
+            <Link to="/admin" className="hover:text-blue-600">Admin</Link> */}
           </nav>
 
           {/* Mobile Hamburger */}
@@ -64,20 +78,53 @@ const Header = () => {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden bg-gray-300 shadow-md px-6 py-4 space-y-3 text-center">
-            <Link to="/" onClick={toggleMenu} className="block hover:text-blue-600">Home</Link>
-            <Link to="/shop" onClick={toggleMenu} className="block hover:text-blue-600">Shop</Link>
-            <Link to="/about" onClick={toggleMenu} className="block hover:text-blue-600">About</Link>
-            <Link to="/contact" onClick={toggleMenu} className="block hover:text-blue-600">Contact</Link>
+            <Link
+              to="/"
+              onClick={toggleMenu}
+              className="block hover:text-blue-600"
+            >
+              Home
+            </Link>
+            <Link
+              to="/shop"
+              onClick={toggleMenu}
+              className="block hover:text-blue-600"
+            >
+              Shop
+            </Link>
+            <Link
+              to="/about"
+              onClick={toggleMenu}
+              className="block hover:text-blue-600"
+            >
+              About
+            </Link>
+            <Link
+              to="/contact"
+              onClick={toggleMenu}
+              className="block hover:text-blue-600"
+            >
+              Contact
+            </Link>
 
             {/* Mobile Cart Button */}
             <button
-              onClick={() => { toggleCart(); toggleMenu(); }}
+              onClick={() => {
+                toggleCart();
+                toggleMenu();
+              }}
               className="block hover:text-blue-600 w-full text-center "
             >
               Shopping Cart ({cartItemCount})
             </button>
 
-            <Link to="/login" onClick={toggleMenu} className="block hover:text-blue-600">Login</Link>
+            <Link
+              to="/login"
+              onClick={toggleMenu}
+              className="block hover:text-blue-600"
+            >
+              Login
+            </Link>
           </div>
         )}
 

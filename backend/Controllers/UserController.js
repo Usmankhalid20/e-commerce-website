@@ -4,11 +4,11 @@ const generateToken = require("../lib/Ulits");
 
 const signUp = async (req, res) => {
   console.log(req.body);
-  const { name, email, password, role } = req.body;
-  console.log("SignUp request received:", { name, email, password, role });
+  const { fullName, email, password, role } = req.body;
+  console.log("SignUp request received:", { fullName, email, password, role });
 
   try {
-    if (!name || !email || !password || !role) {
+    if (!fullName || !email || !password || !role) {
       return res
         .status(400)
         .json({ message: "Please provide all required fields" });
@@ -19,12 +19,12 @@ const signUp = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
-      name,
+      fullName,
       email,
       role,
       password: hashedPassword,
     });
-    console.log(newUser)
+    console.log(newUser);
     if (newUser) {
       generateToken(newUser._id, res);
       console.log("New user created:", newUser);
@@ -32,7 +32,7 @@ const signUp = async (req, res) => {
 
       res.status(201).json({
         _id: newUser._id,
-        name: newUser.name,
+        fullName: newUser.fullName,
         email: newUser.email,
         role: newUser.role,
         password: newUser.password,
@@ -48,8 +48,8 @@ const signUp = async (req, res) => {
 
 const Login = async (req, res) => {
   const { email, password } = req.body;
-  console.log("req body", req.body)
-  console.log("Login request received:", { email, password });
+  // console.log("req body", req.body)
+  // console.log("Login request received:", { email, password });
   try {
     if (!email || !password) {
       return res
@@ -58,7 +58,7 @@ const Login = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    console.log("Found user:", user);
+    // console.log("Found user:", user);
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
@@ -67,7 +67,7 @@ const Login = async (req, res) => {
       return res.status(400).json({ message: "Invalid password" });
     }
     generateToken(user._id, res);
-    console.log("New user created:", user);
+    // console.log("New user created:", user);
 
     res.status(201).json({
       _id: user._id,
@@ -90,10 +90,85 @@ const checkAuth = (req, res) => {
   }
 };
 
-const getUsers = async(req, res) => {
+
+const updateProfile = async (req, res) => {
+  try {
+    const { fullName, email, bio, avatar } = req.body;
+    const userId = req.user._id;
+
+    // Basic validation
+    if (!fullName || !email) {
+      console.log("Validation failed: missing fullName or email");
+      return res.status(400).json({
+        message: "Full name and email are required",
+        received: { fullName, email },
+      });
+    }
+
+    // ✅ Check if email is already taken by another user
+    const existingUser = await User.findOne({ email, _id: { $ne: userId } });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+
+    // Build update data
+    const updateData = {
+      fullName,
+      email,
+      bio: bio || "",
+    };
+
+    // Handle avatar update
+    if (req.file) {
+      // File uploaded via Multer
+      const imageUrl = `${req.protocol}://${req.get("host")}/uploads/profiles/${req.file.filename}`;
+      updateData.profilePic = imageUrl;
+    } else if (avatar) {
+      // Base64 string from frontend
+      updateData.profilePic = avatar;
+    }
+
+    // Update user
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(updatedUser);
+
+  } catch (error) {
+    console.error("Error in updateProfile controller:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+// const getUserUpdateProfile = async(req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const user = await User.findById(userId).select("-password");
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+//     return res.status(200).json(user);
+//   } catch (error) {
+//     console.log("Error in getUserUpdateProfile controller", error.message);
+//     res.status(500).json({ message: "Internal Server Error" });
+    
+//   }
+// }
+
+const getUsers = async (req, res) => {
   try {
     const users = await User.find();
-    if(users.length===0){
+    if (users.length === 0) {
       return res.status(404).json({ message: "No users found" });
     }
      console.log(`Fetched ${users.length} users`);
@@ -103,7 +178,7 @@ const getUsers = async(req, res) => {
     console.log("Error in getUsers controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
 
 const Logout = (req, res) => {
   try {
@@ -122,7 +197,4 @@ const Logout = (req, res) => {
   }
 };
 
-
-
-
-module.exports = { signUp, Login, checkAuth, Logout, getUsers };
+module.exports = { signUp, Login, checkAuth, Logout, getUsers, updateProfile };

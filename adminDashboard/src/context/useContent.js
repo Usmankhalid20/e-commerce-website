@@ -67,7 +67,7 @@ export const useAuth = create((set, get) => ({
   //   }
   // },
 
-  Login: async ({ email, password }) => {
+Login: async ({ email, password }) => {
   set({ isSigninIn: true });
   try {
     const res = await axiosInstance.post("/auth/login", { email, password });
@@ -94,9 +94,7 @@ export const useAuth = create((set, get) => ({
   }
 },
 
-
-
-Logout: async () => {
+ Logout: async () => {
     set({ isLoggingOut: true });
     try {
       const res = await axiosInstance.post("/auth/logout");
@@ -109,9 +107,6 @@ Logout: async () => {
     } finally {
       set({ isLoggingOut: false });
     }
-  },
-
-
-
+},
 
 }));
