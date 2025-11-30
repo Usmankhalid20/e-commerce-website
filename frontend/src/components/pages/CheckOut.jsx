@@ -23,7 +23,9 @@ const CheckOut = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    console.log("Order submitted:", formData);
+    alert("Order submitted! (Mock)");
+    // onSubmit(formData); // TODO: Implement actual submission logic
   };
 
   const subtotal = cart.reduce(

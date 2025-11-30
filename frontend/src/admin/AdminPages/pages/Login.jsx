@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../../components/context/AuthContext";
 import { Loader2 } from "lucide-react";
 
 const Login = () => {
@@ -12,18 +12,16 @@ const Login = () => {
   const { Login, isSigninIn, error } = useAuth();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Login page");
-
-    const userData = await Login({ email, password });
-    if (userData?.user?.role === "admin") {
-      navigate("/admin");
-    } else {
-      navigate("/");
-    } 
-    
-  };
-
+  e.preventDefault();
+  console.log("Login page");
+  try {
+      await Login({ email, password, role }); // ✅ include role if your backend supports it
+      navigate("/"); // ✅ redirect after login
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
+  }; 
+  
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

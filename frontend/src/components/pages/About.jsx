@@ -1,148 +1,148 @@
 import React from 'react';
 import { FaLeaf, FaFlask, FaChessPawn, FaCreativeCommonsNcEu } from 'react-icons/fa';
+import Section from '../UI/Section';
+import Button from '../UI/Button';
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-rose-50">
+    <>
       {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-rose-100 to-rose-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 font-serif">Our Story</h1>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              One Drop was born from a simple belief - that one drop of the right ingredients can transform your skin.
-            </p>
-          </div>
+      <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-stone-50 flex items-center justify-center text-center">
+        <div className="max-w-3xl mx-auto">
+          <span className="text-accent font-medium tracking-widest text-sm uppercase mb-4 block animate-fade-in">
+            Since 2020
+          </span>
+          <h1 className="text-5xl md:text-7xl font-serif font-medium text-primary mb-8 leading-tight">
+            Our Story
+          </h1>
+          <p className="text-xl text-stone-600 leading-relaxed font-light">
+            One Drop was born from a simple belief - that one drop of the right ingredients can transform your skin.
+          </p>
         </div>
       </section>
 
       {/* Mission Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="lg:flex items-center gap-16">
-            <div className="lg:w-1/2 mb-10 lg:mb-0">
+      <Section className="bg-white">
+          <div className="lg:flex items-center gap-20">
+            <div className="lg:w-1/2 mb-10 lg:mb-0 relative">
+              <div className="absolute -top-4 -left-4 w-full h-full border-2 border-accent/20 rounded-lg transform -translate-x-2 -translate-y-2"></div>
               <img 
                 src="https://images.unsplash.com/photo-1556228578-8c89e6adf883" 
                 alt="Skincare serum bottle"
-                className="rounded-lg shadow-xl w-full h-auto object-cover"
+                className="relative rounded-lg shadow-2xl w-full h-auto object-cover aspect-[4/5]"
               />
             </div>
             <div className="lg:w-1/2">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 font-serif">Our Mission</h2>
-              <p className="text-lg text-gray-700 mb-6">
+              <h2 className="text-4xl font-serif font-medium text-primary mb-8">Our Mission</h2>
+              <p className="text-lg text-stone-600 mb-6 leading-relaxed">
                 At One Drop, we're revolutionizing skincare by harnessing the power of concentrated, 
                 scientifically-proven ingredients in their purest form. Our signature serum delivers 
                 transformative results with just one drop.
               </p>
-              <p className="text-lg text-gray-700 mb-8">
+              <p className="text-lg text-stone-600 mb-10 leading-relaxed">
                 We believe in quality over quantity, purity over fillers, and results over hype. 
                 Every bottle is crafted with meticulous attention to detail and a commitment to 
                 sustainable beauty.
               </p>
-              <button className="bg-rose-600 hover:bg-rose-700 text-white px-8 py-3 rounded-full font-medium transition duration-300">
+              <Button to="/shop" variant="primary">
                 Discover Our Serum
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
-      </section>
+      </Section>
 
       {/* Values Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-16 font-serif">Our Core Values</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center p-6 rounded-lg bg-rose-50">
-              <div className="flex justify-center mb-4">
-                <FaLeaf className="text-4xl text-rose-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Pure Ingredients</h3>
-              <p className="text-gray-700">
-                We use only the purest, most effective ingredients nature and science can provide.
-              </p>
-            </div>
-            
-            <div className="text-center p-6 rounded-lg bg-rose-50">
-              <div className="flex justify-center mb-4">
-                <FaFlask className="text-4xl text-rose-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Science-Backed</h3>
-              <p className="text-gray-700">
-                Every formula is developed with dermatologists and clinically tested for results.
-              </p>
-            </div>
-            
-            <div className="text-center p-6 rounded-lg bg-rose-50">
-              <div className="flex justify-center mb-4">
-                <FaChessPawn className="text-4xl text-rose-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Luxury Experience</h3>
-              <p className="text-gray-700">
-                From packaging to application, we deliver a sensorial experience that delights.
-              </p>
-            </div>
-            
-            <div className="text-center p-6 rounded-lg bg-rose-50">
-              <div className="flex justify-center mb-4">
-                <FaCreativeCommonsNcEu className="text-4xl text-rose-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Sustainable Beauty</h3>
-              <p className="text-gray-700">
-                We're committed to ethical sourcing and environmentally responsible practices.
-              </p>
-            </div>
+      <Section className="bg-stone-50">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+             <h2 className="text-4xl font-serif font-medium text-primary mb-4">Our Core Values</h2>
+             <p className="text-stone-500">The principles that guide everything we do.</p>
           </div>
-        </div>
-      </section>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <ValueCard 
+              icon={FaLeaf} 
+              title="Pure Ingredients" 
+              desc="We use only the purest, most effective ingredients nature and science can provide." 
+            />
+            <ValueCard 
+              icon={FaFlask} 
+              title="Science-Backed" 
+              desc="Every formula is developed with dermatologists and clinically tested for results." 
+            />
+            <ValueCard 
+              icon={FaChessPawn} 
+              title="Luxury Experience" 
+              desc="From packaging to application, we deliver a sensorial experience that delights." 
+            />
+            <ValueCard 
+              icon={FaCreativeCommonsNcEu} 
+              title="Sustainable Beauty" 
+              desc="We're committed to ethical sourcing and environmentally responsible practices." 
+            />
+          </div>
+      </Section>
 
       {/* Founder Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-rose-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="lg:flex items-center gap-16 flex-row-reverse">
+      <Section className="bg-white">
+          <div className="lg:flex items-center gap-20 flex-row-reverse">
             <div className="lg:w-1/2 mb-10 lg:mb-0">
               <img 
                 src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e" 
                 alt="Founder"
-                className="rounded-lg shadow-xl w-full h-auto object-cover"
+                className="rounded-lg shadow-xl w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
             <div className="lg:w-1/2">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 font-serif">Meet Our Founder</h2>
-              <p className="text-lg text-gray-700 mb-6">
+              <h2 className="text-4xl font-serif font-medium text-primary mb-8">Meet Our Founder</h2>
+              <blockquote className="text-xl text-stone-600 mb-8 italic font-serif leading-relaxed border-l-4 border-accent pl-6">
                 "After years of struggling with sensitive skin and ineffective products, I set out to create 
                 something different. One Drop is the culmination of my journey - a serum that actually works, 
                 with no unnecessary additives."
-              </p>
-              <p className="text-lg text-gray-700 mb-4">
-                <span className="font-semibold">— Dr. Emily Chen</span>, Dermatologist and Founder
-              </p>
-              <p className="text-gray-700">
+              </blockquote>
+              <div className="mb-6">
+                <p className="text-lg font-bold text-primary">— Dr. Emily Chen</p>
+                <p className="text-stone-500">Dermatologist and Founder</p>
+              </div>
+              <p className="text-stone-600 leading-relaxed">
                 Board-certified dermatologist with over 15 years of experience in cosmetic chemistry.
               </p>
             </div>
           </div>
-        </div>
-      </section>
+      </Section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-rose-600 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 font-serif">Experience the One Drop Difference</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-primary text-white text-center">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-serif font-medium mb-8">Experience the One Drop Difference</h2>
+          <p className="text-xl text-stone-300 mb-10 max-w-2xl mx-auto font-light">
             Join thousands of customers who have transformed their skin with our revolutionary serum.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="bg-white text-rose-600 hover:bg-gray-100 px-8 py-3 rounded-full font-medium transition duration-300">
+            <Button to="/shop" variant="white" size="lg">
               Shop Now
-            </button>
-            <button className="border-2 border-white hover:bg-rose-700 px-8 py-3 rounded-full font-medium transition duration-300">
+            </Button>
+            <Button to="/about" variant="outline" className="text-white border-white hover:bg-white hover:text-primary" size="lg">
               Learn More
-            </button>
+            </Button>
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };
+
+const ValueCard = ({ icon: Icon, title, desc }) => (
+  <div className="text-center p-8 rounded-xl bg-white border border-stone-100 shadow-sm hover:shadow-md transition-all duration-300">
+    <div className="flex justify-center mb-6">
+      <div className="w-14 h-14 bg-stone-50 rounded-full flex items-center justify-center text-accent">
+         <Icon className="text-2xl" />
+      </div>
+    </div>
+    <h3 className="text-xl font-serif font-medium text-primary mb-3">{title}</h3>
+    <p className="text-stone-500 leading-relaxed text-sm">
+      {desc}
+    </p>
+  </div>
+);
 
 export default About;

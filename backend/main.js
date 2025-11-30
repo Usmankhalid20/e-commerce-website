@@ -16,11 +16,11 @@ app.use(cors({
 }));
 
 app.use("/uploads", express.static("uploads"));
-connectDB();
+connectDB().then(() => {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+  })
+});
 app.use('/api/auth', userRoutes)
 app.use("/api/adminAuth", dashboardRoutes);
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})

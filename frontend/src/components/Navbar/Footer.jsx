@@ -1,71 +1,96 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaTwitter, FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-gray-900 text-gray-300 py-8 mt-16 border-t border-gray-700">
+    <footer className="bg-white text-stone-600 pt-20 pb-10 border-t border-stone-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="text-white text-lg font-semibold mb-4">One Drop</h3>
-            <p className="text-sm">Your solution for role-based access control and permissions management.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
+          {/* Brand Column */}
+          <div className="space-y-6">
+            <h3 className="text-2xl font-serif font-bold text-primary tracking-tight">
+              OneDrop<span className="text-accent">.</span>
+            </h3>
+            <p className="text-stone-500 text-sm leading-relaxed max-w-xs">
+              Elevating your skincare routine with premium, scientifically-proven ingredients. Pure, effective, and luxurious.
+            </p>
+            <div className="flex space-x-5 pt-2">
+              <SocialLink href="#" icon={<FaTwitter />} label="Twitter" />
+              <SocialLink href="#" icon={<FaGithub />} label="GitHub" />
+              <SocialLink href="#" icon={<FaLinkedin />} label="LinkedIn" />
+              <SocialLink href="#" icon={<FaInstagram />} label="Instagram" />
+            </div>
           </div>
           
+          {/* Links Columns */}
           <div>
-            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-4">Resources</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-sm hover:text-white transition">Documentation</a></li>
-              <li><a href="#" className="text-sm hover:text-white transition">API Reference</a></li>
-              <li><a href="#" className="text-sm hover:text-white transition">Guides</a></li>
+            <h4 className="text-primary text-xs font-bold uppercase tracking-widest mb-6">Shop</h4>
+            <ul className="space-y-4">
+              <FooterLink to="/shop">All Products</FooterLink>
+              <FooterLink to="/shop?category=new">New Arrivals</FooterLink>
+              <FooterLink to="/shop?category=featured">Best Sellers</FooterLink>
+              <FooterLink to="/shop?category=sets">Gift Sets</FooterLink>
             </ul>
           </div>
           
           <div>
-            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-4">Company</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-sm hover:text-white transition">About</a></li>
-              <li><a href="#" className="text-sm hover:text-white transition">Blog</a></li>
-              <li><a href="#" className="text-sm hover:text-white transition">Careers</a></li>
+            <h4 className="text-primary text-xs font-bold uppercase tracking-widest mb-6">Company</h4>
+            <ul className="space-y-4">
+              <FooterLink to="/about">Our Story</FooterLink>
+              <FooterLink to="/contact">Contact Us</FooterLink>
+              <FooterLink to="/careers">Careers</FooterLink>
+              <FooterLink to="/journal">The Journal</FooterLink>
             </ul>
           </div>
           
           <div>
-            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-4">Legal</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-sm hover:text-white transition">Privacy</a></li>
-              <li><a href="#" className="text-sm hover:text-white transition">Terms</a></li>
-              <li><a href="#" className="text-sm hover:text-white transition">Cookie Policy</a></li>
+            <h4 className="text-primary text-xs font-bold uppercase tracking-widest mb-6">Support</h4>
+            <ul className="space-y-4">
+              <FooterLink to="/faq">FAQ</FooterLink>
+              <FooterLink to="/shipping">Shipping & Returns</FooterLink>
+              <FooterLink to="/privacy">Privacy Policy</FooterLink>
+              <FooterLink to="/terms">Terms of Service</FooterLink>
             </ul>
           </div>
         </div>
         
-        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm">&copy; {currentYear} Role Based. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="text-gray-400 hover:text-white">
-              <span className="sr-only">Twitter</span>
-              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-              </svg>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <span className="sr-only">GitHub</span>
-              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.12 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-              </svg>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <span className="sr-only">LinkedIn</span>
-              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-              </svg>
-            </a>
+        <div className="pt-8 border-t border-stone-100 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-stone-400 text-xs">
+            &copy; {currentYear} OneDrop Inc. All rights reserved.
+          </p>
+          <div className="flex space-x-6 text-xs text-stone-400">
+            <Link to="/privacy" className="hover:text-accent transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-accent transition-colors">Terms</Link>
+            <Link to="/sitemap" className="hover:text-accent transition-colors">Sitemap</Link>
           </div>
         </div>
       </div>
     </footer>
   );
 };
+
+const SocialLink = ({ href, icon, label }) => (
+  <a 
+    href={href} 
+    className="text-stone-400 hover:text-accent transition-colors transform hover:-translate-y-1 duration-200"
+    aria-label={label}
+  >
+    <span className="text-lg">{icon}</span>
+  </a>
+);
+
+const FooterLink = ({ to, children }) => (
+  <li>
+    <Link 
+      to={to} 
+      className="text-sm text-stone-500 hover:text-primary transition-colors inline-block hover:translate-x-1 duration-200"
+    >
+      {children}
+    </Link>
+  </li>
+);
 
 export default Footer;

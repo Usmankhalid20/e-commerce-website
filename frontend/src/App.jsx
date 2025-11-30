@@ -16,6 +16,12 @@ import Cart from "./components/pages/Cart";
 import CheckOut from "./components/pages/CheckOut";
 import ProtectedRoute from "./components/lib/ProtectedRoute";
 import ProfileUpdate from "./components/Navbar/ProfileUpdate";
+import AdminHome from "./admin/AdminPages/Dashboard/AdminHome";
+import LayoutAdmin from "./admin/AdminPages/pages/LayoutAdmin";
+import UserPage from "./admin/AdminPages/components/UserPage";
+import ListingPage from "./admin/AdminPages/components/ListingPage";
+import OrdersPage from "./admin/AdminPages/components/OrdersPage";
+import Unauthorized from "./admin/AdminPages/pages/auth/Unauthorized";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuth();
@@ -61,6 +67,22 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<CheckOut />} />
           <Route path="/profileUpdate" element={<ProfileUpdate />} />
+        </Route>
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <LayoutAdmin />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminHome />} />
+          <Route path="users" element={<UserPage />} />
+          <Route path="listing" element={<ListingPage />} />
+          <Route path="orders" element={<OrdersPage />} />
+          <Route path="unauthorized" element={<Unauthorized />} />
         </Route>
  
     

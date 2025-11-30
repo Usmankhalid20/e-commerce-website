@@ -1,139 +1,159 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
-import { FaCartShopping } from "react-icons/fa6";
-import ShoppingCart from "../pages/ShoppingCart";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Search, ShoppingBag, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import Profile from "../Navbar/Profile";
+import Button from "../UI/Button";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const { authUser, cart } = useAuth();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
-  const toggleCart = () => setIsCartOpen((prev) => !prev);
 
-  // ✅ Get cart from context
-  const cart = useAuth((state) => state.cart);
-  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Shop", path: "/shop" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
 
   return (
-    <>
-      <header className="text-black p-4 shadow bg-white fixed w-full z-50">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          {/* Logo */}
-          <Link to="/" className="text-2xl font-bold hover:text-blue-600">
-            OneDrop
+    <header
+      className={`fixed w-full z-50 transition-all duration-300 ${
+        scrolled || isOpen ? "bg-white/90 backdrop-blur-md shadow-sm py-3" : "bg-transparent py-5"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-serif font-bold tracking-tight text-primary">
+          OneDrop<span className="text-accent">.</span>
+        </Link>
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center space-x-8">
+          {navLinks.map((link, index) => (
+            <Link
+              key={index}
+              to={link.path}
+              className={`text-sm font-medium transition-colors duration-200 ${
+                location.pathname === link.path 
+                  ? "text-accent" 
+                  : "text-stone-600 hover:text-primary"
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Right Actions */}
+        <div className="hidden md:flex items-center space-x-6">
+          <button className="text-stone-600 hover:text-primary transition-colors">
+            <Search size={20} strokeWidth={1.5} />
+          </button>
+
+          <Link to="/cart" className="text-stone-600 hover:text-primary transition-colors relative">
+            <ShoppingBag size={20} strokeWidth={1.5} />
+            {cart?.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                {cart.length}
+              </span>
+            )}
           </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex space-x-6 font-medium items-center">
-            <Link to="/" className="hover:text-blue-600">
-              Home
-            </Link>
-            <Link to="/shop" className="hover:text-blue-600">
-              Shop
-            </Link>
-            <Link to="/about" className="hover:text-blue-600">
-              About
-            </Link>
-            <Link to="/contact" className="hover:text-blue-600">
-              Contact
-            </Link>
-
-            {/* Cart Icon */}
-            <button
-              type="button"
-              className="relative inline-flex items-center hover:text-blue-600"
-              onClick={toggleCart}
-            >
-              <FaCartShopping className="text-2xl" />
-              {cartItemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartItemCount}
-                </span>
-              )}
-            </button>
-              <div>
-                {" "}
-                {/* Change button to div */}
-                <Profile className="text-2xl" />
-              </div>
-            
-            {/* <Link to="/login" className="hover:text-blue-600">Login</Link>
-            <Link to="/admin" className="hover:text-blue-600">Admin</Link> */}
-          </nav>
-
-          {/* Mobile Hamburger */}
-          <div className="md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="text-black focus:outline-none"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+          
+          <div className="h-4 w-px bg-stone-300"></div>
+          
+          {authUser ? (
+             <div className="pl-2">
+               <Profile />
+             </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <Link to="/login" className="text-sm font-medium text-stone-600 hover:text-primary">
+                Login
+              </Link>
+              <Button to="/shop" variant="primary" size="sm">
+                Shop Now
+              </Button>
+            </div>
+          )}
         </div>
 
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden bg-gray-300 shadow-md px-6 py-4 space-y-3 text-center">
-            <Link
-              to="/"
-              onClick={toggleMenu}
-              className="block hover:text-blue-600"
-            >
-              Home
-            </Link>
-            <Link
-              to="/shop"
-              onClick={toggleMenu}
-              className="block hover:text-blue-600"
-            >
-              Shop
-            </Link>
-            <Link
-              to="/about"
-              onClick={toggleMenu}
-              className="block hover:text-blue-600"
-            >
-              About
-            </Link>
-            <Link
-              to="/contact"
-              onClick={toggleMenu}
-              className="block hover:text-blue-600"
-            >
-              Contact
-            </Link>
+        {/* Mobile Hamburger */}
+        <div className="md:hidden flex items-center gap-4">
+           <button className="text-stone-600 hover:text-primary">
+            <Search size={20} strokeWidth={1.5} />
+          </button>
+          <Link to="/cart" className="text-stone-600 hover:text-primary relative">
+            <ShoppingBag size={20} strokeWidth={1.5} />
+            {cart?.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                {cart.length}
+              </span>
+            )}
+          </Link>
+          <button onClick={toggleMenu} className="text-primary focus:outline-none">
+            {isOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
+          </button>
+        </div>
+      </div>
 
-            {/* Mobile Cart Button */}
-            <button
-              onClick={() => {
-                toggleCart();
-                toggleMenu();
-              }}
-              className="block hover:text-blue-600 w-full text-center "
-            >
-              Shopping Cart ({cartItemCount})
-            </button>
-
+      {/* Mobile Menu */}
+      <div 
+        className={`md:hidden absolute top-full left-0 w-full bg-white border-t border-stone-100 shadow-lg transition-all duration-300 ease-in-out overflow-hidden ${
+          isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="px-6 py-8 space-y-6 flex flex-col items-center text-center">
+          {navLinks.map((link, index) => (
             <Link
-              to="/login"
-              onClick={toggleMenu}
-              className="block hover:text-blue-600"
+              key={index}
+              to={link.path}
+              className={`text-lg font-medium ${
+                location.pathname === link.path ? "text-accent" : "text-primary"
+              }`}
             >
-              Login
+              {link.name}
             </Link>
-          </div>
-        )}
-
-        {/* Cart Drawer */}
-        {isCartOpen && (
-          <ShoppingCart isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen} />
-        )}
-      </header>
-    </>
+          ))}
+          
+          <div className="w-12 h-px bg-stone-200 my-2"></div>
+          
+          {authUser ? (
+             <div className="flex flex-col items-center gap-4">
+                 <span className="text-sm text-stone-500">Welcome back!</span>
+                 <Profile />
+             </div>
+          ) : (
+            <div className="flex flex-col gap-4 w-full max-w-xs">
+              <Link to="/login" className="text-stone-600 font-medium py-2">
+                Login
+              </Link>
+              <Button to="/shop" variant="primary" className="w-full">
+                Shop Now
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
   );
 };
 

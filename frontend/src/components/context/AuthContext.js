@@ -14,6 +14,7 @@ export const useAuth = create((set, get) => ({
   quantity: 1,
   role: null,
   products: [],
+  error: null,
   
 
   checkAuth: async () => {
@@ -35,7 +36,7 @@ export const useAuth = create((set, get) => ({
   },
 
   signup: async (data) => {
-    set({ isSigningUp: true });
+    set({ isSigningUp: true, error: null });
     try {
       const res = await axiosInstance.post("/auth/signup", data);
       console.log(res, "signup");
@@ -43,29 +44,38 @@ export const useAuth = create((set, get) => ({
       toast.success("Account Created Successfully");
     } catch (error) {
        console.log("Error is checkAuth:", error);
-      toast.error("Error is checkAuth:");
+      set({ error: error.response?.data?.message || "Error in Signup" });
+      toast.error(error.response?.data?.message || "Error in Signup");
     } finally {
       set({ isSigningUp: false });
     }
   },
 
   Login: async (data) => {
-    set({ isSigninIn: true });
+    set({ isSigninIn: true, error: null });
     try {
       const res = await axiosInstance.post("/auth/login", data);
       console.log(res, "login");
+      
+      // Handle response structure where user might be nested or direct
+      const user = res.data.user || res.data;
+      
       set({ 
-        authUser: res.data,
-        role: res.data
+        authUser: user,
+        role: user?.role
       });
       toast.success("Logged in Successfully");
+      return res.data; // Return data for caller
     } catch (error) {
+      const errorMessage = error.response?.data?.message || error.message || "Error in Login";
       set({
         authUser: null,
-        role: null
+        role: null,
+        error: errorMessage
       });
       console.log("error in Login:", error)
-      toast.error("Error in Login");
+      toast.error(errorMessage);
+      return null;
     } finally {
       set({ isSigninIn: false });
     }

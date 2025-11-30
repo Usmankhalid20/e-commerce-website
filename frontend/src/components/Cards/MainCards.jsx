@@ -1,32 +1,28 @@
-import React from 'react'
-// import { cardData } from '../Constant/content'
+import React, { useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import ProductCard from './ProductCard'
-import { useEffect } from 'react'
 
 const MainCards = () => {
-const { products, fetchProducts} = useAuth();
+  const { products, fetchProducts } = useAuth();
 
-useEffect(() => {
-  fetchProducts();
-}, [fetchProducts])
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts])
 
-if (!Array.isArray(products) || products.length === 0) {
-    return <p>No products available</p>;
-  };
+  if (!Array.isArray(products) || products.length === 0) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <div className="w-8 h-8 border-2 border-stone-200 border-t-primary rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
-    <>
-<div className="w-full px-4 py-10">
-  <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6 lg:gap-10">
-   {products.map((item) => (
-           <ProductCard key={item._id} product={item} />
-        ))}
-  </div>
-</div>
-
-
-    </>
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
+      {products.map((item) => (
+        <ProductCard key={item._id} product={item} />
+      ))}
+    </div>
   )
 }
 
