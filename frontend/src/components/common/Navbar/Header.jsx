@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Search, ShoppingBag, User } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
-import Profile from "../Navbar/Profile";
-import Button from "../UI/Button";
+import { useAuth } from "../../../context/AuthContext";
+import Profile from "./Profile";
+import Button from "../../ui/Button";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);

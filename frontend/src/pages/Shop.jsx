@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
-import ProductCard from "../Cards/ProductCard";
-import Section from "../UI/Section";
-import Button from "../UI/Button";
+import ProductCard from "../components/common/Cards/ProductCard";
+import Section from "../components/ui/Section";
+import Button from "../components/ui/Button";
 import { Filter, ChevronDown } from "lucide-react";
 
 const Shop = () => {

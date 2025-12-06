@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import MainCards from '../Cards/MainCards';
+import MainCards from '../components/common/Cards/MainCards';
 import { ArrowRight, Truck, ShieldCheck, RefreshCw, Star, Tag, Heart, Plus, Minus, ChevronDown, ChevronUp } from 'lucide-react';
-import Button from '../UI/Button';
-import Section from '../UI/Section';
+import Button from '../components/ui/Button';
+import Section from '../components/ui/Section';
 
 const HomePage = () => {
   return (
@@ -12,7 +12,7 @@ const HomePage = () => {
       <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-stone-50">
         <div className="absolute inset-0 z-0">
            <img
-              src="https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?q=80&w=2574&auto=format&fit=crop"
+              src="https://unsplash.com/photos/a-couple-of-bottles-of-liquid-sitting-on-top-of-a-bed-iZQDneG5KoY"
               alt="Background"
               className="w-full h-full object-cover opacity-5"
             />
@@ -35,12 +35,12 @@ const HomePage = () => {
               </p>
               
               <div className="flex flex-wrap gap-4">
-                <Button to="/shop" variant="primary" size="lg">
-                  Shop Collection
-                </Button>
-                <Button to="/about" variant="outline" size="lg">
-                  Our Story
-                </Button>
+                <Link to="/shop" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-accent transition-colors">
+                  Shop Collection <ArrowRight size={16} />
+                </Link>
+                <Link to="/about" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-accent transition-colors">
+                  Our Story <ArrowRight size={16} />
+                </Link>
               </div>
             </div>
 
@@ -49,7 +49,7 @@ const HomePage = () => {
                <div className="relative z-10 w-full max-w-md">
                  <div className="absolute -inset-4 bg-accent/10 rounded-full blur-3xl"></div>
                  <img
-                    src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
+                    src="https://images.unsplash.com/photo-1643747394944-89b11e7fb616?q=80&w=1228&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     alt="Fashion Model"
                     className="relative rounded-t-[10rem] rounded-b-[2rem] shadow-2xl object-cover aspect-[3/4] w-full"
                   />
@@ -90,7 +90,7 @@ const HomePage = () => {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1 relative">
                <img 
-                 src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2670&auto=format&fit=crop" 
+                 src="https://images.unsplash.com/photo-1696025522422-aa9a74e4f3d5?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                  alt="Clothing Collection" 
                  className="rounded-lg shadow-xl w-full h-auto"
                />

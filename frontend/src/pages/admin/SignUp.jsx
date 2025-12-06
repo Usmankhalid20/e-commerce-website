@@ -1,29 +1,27 @@
-// pages/SignUp.js
-import { useState } from "react";
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import { Loader2 } from "lucide-react";
 
 const SignUp = () => {
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
-  // const [error, setError] = useState('');
-  const { signup, isSigningUp } = useAuth();
+
+  const { signup, isSigningUp, authUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      await signup({fullName, email, password, role});
-      navigate('/');
-    } catch (error) {
-      console.log(error, 'Registration failed');
+    await signup({ name, email, password, role });
+
+    // ✅ Redirect only if signup worked
+    if (authUser) {
+      navigate("/");
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
@@ -33,12 +31,12 @@ const SignUp = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Full Name
+              Name
             </label>
             <input
               type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
               className="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -106,7 +104,7 @@ const SignUp = () => {
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-600 hover:underline">
-            Login
+            SignUp
           </Link>
         </p>
       </div>

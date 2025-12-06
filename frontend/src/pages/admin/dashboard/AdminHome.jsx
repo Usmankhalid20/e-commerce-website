@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../components/context/AuthContext";
-import axiosInstance from "../../../components/lib/axios";
+import { useAuth } from "../../../context/AuthContext";
+import axiosInstance from "../../../lib/axios";
 import DashboardStats from "./components/DashboardStats";
 import DashboardCharts from "./components/DashboardCharts";
 

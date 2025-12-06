@@ -1,7 +1,7 @@
 // import { Link } from "react-router-dom";
 // import { FiLogOut, FiMenu, FiX } from "react-icons/fi";
 // import { useAuth } from "../../../context/AuthContext";
-import AdminProfile from "../pages/AdminProfile";
+import AdminProfile from "./AdminProfile";
 // import { useState } from "react";
 
 // export default function AdminNavbar() {

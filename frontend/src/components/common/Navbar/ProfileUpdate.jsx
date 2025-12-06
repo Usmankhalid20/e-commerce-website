@@ -1,5 +1,5 @@
 import ProfileInformation from './ProfileInformation';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 
 const ProfileUpdate = () => {
   const { updatedUserProfile, authUser } = useAuth();
