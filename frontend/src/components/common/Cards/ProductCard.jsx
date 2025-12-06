@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaStar, FaShoppingCart, FaRegHeart } from "react-icons/fa";
-import Button from "../UI/Button";
+import Button from "../../ui/Button";
 
 const ProductCard = ({ product }) => {
   const discount = Math.round(((product.mrp - product.price) / product.mrp) * 100);

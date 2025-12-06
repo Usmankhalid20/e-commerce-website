@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaInstagram, FaFacebookF, FaTwitter } from 'react-icons/fa';
-import Section from '../UI/Section';
-import Button from '../UI/Button';
+import Section from '../components/ui/Section';
+import Button from '../components/ui/Button';
 
 const Contact = () => {
   return (

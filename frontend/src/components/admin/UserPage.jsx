@@ -19,7 +19,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 // import { useAuth } from '../../context/AuthContext';
-import axiosInstance from "../../../components/lib/axios";
+import axiosInstance from "../../lib/axios";
 
 export default function UserPage() {
   const [users, setUsers] = useState([]);

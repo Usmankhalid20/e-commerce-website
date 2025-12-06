@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axiosInstance from "../../../components/lib/axios";
+import axiosInstance from "../../lib/axios";
 
 const ListingPage = () => {
   const [product, setProduct] = useState({

@@ -1,7 +1,7 @@
 import React from "react";
-import AdminNavbar from "./AdminNavbar";
+import AdminNavbar from "../pages/admin/AdminNavbar";
 import { Outlet } from "react-router-dom";
-import Sidebar from "../Dashboard/Sidebar";
+import Sidebar from "../pages/admin/dashboard/Sidebar";
 
 const Layout = () => {
   return (
