@@ -13,10 +13,10 @@ const About = () => {
             Since 2020
           </span>
           <h1 className="text-5xl md:text-7xl font-serif font-medium text-primary mb-8 leading-tight">
-            Our Story
+            The Science of OneDrop
           </h1>
           <p className="text-xl text-stone-600 leading-relaxed font-light">
-            One Drop was born from a simple belief - that one drop of the right ingredients can transform your skin.
+            Born from clinical research, designed for barrier repair. We believe effective skincare shouldn't be complicated.
           </p>
         </div>
       </section>
@@ -119,7 +119,7 @@ const About = () => {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button to="/shop" variant="white" size="lg">
-              Shop Now
+              Shop Skincare
             </Button>
             <Button to="/about" variant="outline" className="text-white border-white hover:bg-white hover:text-primary" size="lg">
               Learn More

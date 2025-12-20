@@ -24,22 +24,26 @@ const HomePage = () => {
             {/* Text Content */}
             <div className="max-w-xl animate-fade-in-up">
               <span className="text-accent font-medium tracking-widest text-sm uppercase mb-4 block">
-                The New Standard
+                The New Standard in Skincare
               </span>
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-medium tracking-tight text-primary mb-8 leading-[1.1]">
-                Elevate Your Style Without Compromise
+                Restore Your Skin’s Natural Barrier
               </h1>
               
-              <p className="text-lg text-stone-600 mb-10 leading-relaxed max-w-lg">
-                Discover premium essentials designed for the modern lifestyle. Quality craftsmanship meets timeless design in our latest collection.
+              <p className="text-lg text-stone-600 mb-6 leading-relaxed max-w-lg">
+                Discover the clinical-grade serum designed to calm, hydrate, and protect sensitive skin. Formulated with dermatologists for visible results.
+              </p>
+
+              <p className="text-sm text-accent font-medium mb-10 block">
+                ✓ Dermatologist-tested &nbsp; • &nbsp; ✓ 30-day money-back guarantee
               </p>
               
               <div className="flex flex-wrap gap-4">
                 <Link to="/shop" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-accent transition-colors">
-                  Shop Collection <ArrowRight size={16} />
+                  Shop Skincare <ArrowRight size={16} />
                 </Link>
-                <Link to="/about" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-accent transition-colors">
-                  Our Story <ArrowRight size={16} />
+                <Link to="/#ingredients" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-accent transition-colors">
+                  See Ingredients <ArrowRight size={16} />
                 </Link>
               </div>
             </div>
@@ -50,7 +54,7 @@ const HomePage = () => {
                  <div className="absolute -inset-4 bg-accent/10 rounded-full blur-3xl"></div>
                  <img
                     src="https://images.unsplash.com/photo-1643747394944-89b11e7fb616?q=80&w=1228&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Fashion Model"
+                    alt="OneDrop Skincare Model"
                     className="relative rounded-t-[10rem] rounded-b-[2rem] shadow-2xl object-cover aspect-[3/4] w-full"
                   />
                </div>
@@ -79,7 +83,7 @@ const HomePage = () => {
                <h3 className="font-serif text-xl mb-2 flex items-center justify-center md:justify-start gap-2">
                  <RefreshCw className="w-5 h-5 text-accent-light" /> Easy Returns
                </h3>
-               <p className="text-stone-300 text-sm">Return within 30 days, no questions asked.</p>
+               <p className="text-stone-300 text-sm">Try it risk-free. Return if not satisfied.</p>
             </div>
           </div>
         </div>
@@ -91,11 +95,11 @@ const HomePage = () => {
             <div className="order-2 lg:order-1 relative">
                <img 
                  src="https://images.unsplash.com/photo-1696025522422-aa9a74e4f3d5?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                 alt="Clothing Collection" 
+                 alt="Radiant Skin Collection" 
                  className="rounded-lg shadow-xl w-full h-auto"
                />
                <div className="absolute -bottom-6 -right-6 bg-cream p-8 rounded-lg shadow-lg hidden md:block max-w-xs">
-                 <p className="font-serif text-2xl text-primary mb-2">"Ethical & Elegant"</p>
+                 <p className="font-serif text-2xl text-primary mb-2">"Pure & Potent"</p>
                  <div className="flex text-accent">
                    {[1,2,3,4,5].map(i => <Star key={i} size={16} fill="currentColor" />)}
                  </div>
@@ -103,25 +107,25 @@ const HomePage = () => {
             </div>
             <div className="order-1 lg:order-2">
               <span className="text-accent font-medium tracking-widest text-sm uppercase mb-4 block">
-                Sustainability First
+                Pure Formulations
               </span>
-              <h2 className="text-4xl font-serif font-medium text-primary mb-6">Sustainable fashion for a better future</h2>
+              <h2 className="text-4xl font-serif font-medium text-primary mb-6">Clean skincare for a healthy glow</h2>
               <p className="text-stone-600 mb-10 leading-relaxed text-lg">
-                We believe in fashion that looks good and does good. Our materials are ethically sourced and environmentally friendly.
+                We believe in skincare that is effective and safe. Our ingredients are ethically sourced, minimal, and scientifically proven to repair your barrier.
               </p>
               
               <div className="grid grid-cols-2 gap-8 mb-10">
                 <div className="border-l-2 border-accent pl-6">
                   <span className="text-5xl font-serif text-primary block mb-2">100%</span>
-                  <span className="text-sm text-stone-500 uppercase tracking-wide">Organic Cotton</span>
+                  <span className="text-sm text-stone-500 uppercase tracking-wide">Clean Ingredients</span>
                 </div>
                 <div className="border-l-2 border-accent pl-6">
                   <span className="text-5xl font-serif text-primary block mb-2">Zero</span>
-                  <span className="text-sm text-stone-500 uppercase tracking-wide">Carbon Footprint</span>
+                  <span className="text-sm text-stone-500 uppercase tracking-wide">Cruelty Free</span>
                 </div>
               </div>
               
-              <Button to="/about" variant="outline">Learn More About Us</Button>
+              <Button to="/about" variant="outline">Our Philosophy</Button>
             </div>
           </div>
       </Section>
@@ -130,14 +134,14 @@ const HomePage = () => {
       <Section className="bg-stone-50">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-4xl font-serif font-medium text-primary mb-4">Why Choose OneDrop</h2>
-            <p className="text-stone-600">Experience the difference with our premium services and customer-first approach.</p>
+            <p className="text-stone-600">Experience the difference with our clinical approach to daily skincare.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
              {[
-               { icon: Star, title: "Premium Quality", desc: "Hand-picked materials ensuring durability and comfort in every stitch." },
-               { icon: Tag, title: "Best Prices", desc: "Luxury fashion at accessible prices, without the markup." },
-               { icon: Heart, title: "Loyalty Rewards", desc: "Earn points with every purchase and unlock exclusive benefits." }
+               { icon: Star, title: "Clinical Formulations", desc: "Developed with dermatologists to ensure maximum safety and efficacy for all skin types." },
+               { icon: Tag, title: "Potent Actives", desc: "High concentrations of active ingredients that deliver real, visible change to your skin." },
+               { icon: Heart, title: "Visible Results", desc: "Join thousands of users who have seen healthier, more radiant skin in just weeks." }
              ].map((item, idx) => (
                <div key={idx} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-stone-100">
                  <div className="w-12 h-12 bg-cream rounded-full flex items-center justify-center mb-6 text-accent">
@@ -156,7 +160,7 @@ const HomePage = () => {
             <div>
               <h2 className="text-4xl font-serif font-medium text-primary mb-4">Featured Collection</h2>
               <p className="text-stone-600 max-w-xl">
-                Our most popular items, handpicked for you.
+                Curated solutions for your skin's unique needs.
               </p>
             </div>
             <Link to="/shop" className="hidden md:flex items-center text-accent hover:text-primary transition-colors font-medium">
@@ -165,7 +169,7 @@ const HomePage = () => {
           </div>
           <MainCards />
           <div className="mt-12 text-center md:hidden">
-             <Button to="/shop" variant="outline" className="w-full">View All Products</Button>
+             <Button to="/shop" variant="outline" className="w-full">View All</Button>
           </div>
       </Section>
       
@@ -177,20 +181,20 @@ const HomePage = () => {
           </div>
           <div className="space-y-4">
             <AccordionItem 
-              question="What is your return policy?" 
-              answer="We offer a 30-day return policy for all unused items in their original packaging. Returns are free for all domestic orders." 
+              question="Is OneDrop suitable for sensitive skin?" 
+              answer="Yes, all our products are hypoallergenic and free from fragrance, alcohol, and harsh chemicals, making them perfect for sensitive skin." 
             />
             <AccordionItem 
-              question="Do you ship internationally?" 
-              answer="Yes, we ship to over 50 countries worldwide. Shipping costs and times vary by location." 
+              question="How often should I use the serum?" 
+              answer="For best results, we recommend applying 2-3 drops twice daily, morning and night, after cleansing." 
             />
             <AccordionItem 
-              question="How do I track my order?" 
-              answer="Once your order ships, you will receive a confirmation email with a tracking number to monitor your delivery." 
+              question="When will I see results?" 
+              answer="Most users report increased hydration immediately, with visible improvements in texture and tone within 2-4 weeks of consistent use." 
             />
              <AccordionItem 
-              question="Are your products sustainable?" 
-              answer="Absolutely. We are committed to 100% ethical sourcing and use organic, eco-friendly materials whenever possible." 
+              question="Are your products cruelty-free?" 
+              answer="Absolutely. We never test on animals and are committed to 100% ethical sourcing standards for all our ingredients." 
             />
           </div>
         </div>
@@ -199,11 +203,11 @@ const HomePage = () => {
       {/* Sticky Mobile Buy Bar */}
       <div className="fixed bottom-0 left-0 w-full bg-white border-t border-stone-200 p-4 md:hidden z-40 flex items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <div>
-           <p className="text-xs text-stone-500 uppercase tracking-wide">New Collection</p>
+           <p className="text-xs text-stone-500 uppercase tracking-wide">Daily Repair Serum</p>
            <p className="font-serif font-bold text-primary">Available Now</p>
         </div>
         <Button to="/shop" variant="primary" size="sm">
-          Shop Now
+          Shop Skincare
         </Button>
       </div>
     </>
