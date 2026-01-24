@@ -11,6 +11,7 @@ const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+  console.log(cart);
 
   return (
     <>
