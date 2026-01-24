@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Search, ShoppingBag, User } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import Profile from "./Profile";
-import Button from "../../ui/Button";
+// import Button from "../../ui/Button";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,7 +90,7 @@ const Header = () => {
                 Login
               </Link>
               <Button to="/shop" variant="primary" size="sm">
-                Shop Now
+                Shop Skincare
               </Button>
             </div>
           )}
@@ -147,7 +147,7 @@ const Header = () => {
                 Login
               </Link>
               <Button to="/shop" variant="primary" className="w-full">
-                Shop Now
+                Shop Skincare
               </Button>
             </div>
           )}

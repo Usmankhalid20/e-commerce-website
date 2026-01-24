@@ -17,6 +17,10 @@ const Footer = () => {
             <p className="text-stone-500 text-sm leading-relaxed max-w-xs">
               Elevating your skincare routine with premium, scientifically-proven ingredients. Pure, effective, and luxurious.
             </p>
+            <div className="mt-4 text-xs font-medium text-accent">
+                <p>Trusted skincare, made simple.</p>
+                <p>Designed for daily skin health.</p>
+            </div>
             <div className="flex space-x-5 pt-2">
               <SocialLink href="#" icon={<FaTwitter />} label="Twitter" />
               <SocialLink href="#" icon={<FaGithub />} label="GitHub" />

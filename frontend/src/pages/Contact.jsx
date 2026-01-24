@@ -10,13 +10,13 @@ const Contact = () => {
       <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-stone-50 flex items-center justify-center text-center">
         <div className="max-w-3xl mx-auto">
           <span className="text-accent font-medium tracking-widest text-sm uppercase mb-4 block animate-fade-in">
-            Get in Touch
+            Client Care
           </span>
           <h1 className="text-5xl md:text-7xl font-serif font-medium text-primary mb-6 leading-tight">
-            Connect With Us
+            Talk to a Skin Expert
           </h1>
           <p className="text-xl text-stone-600 leading-relaxed font-light">
-            We'd love to hear from you. Whether you have questions about our serum or just want to say hello.
+            Whether you need routine advice or have questions about our formula, our team of specialists is here to help.
           </p>
         </div>
       </section>

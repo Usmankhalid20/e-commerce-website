@@ -35,13 +35,13 @@ const Shop = () => {
         </div>
         <div className="relative z-10 text-center px-4 animate-fade-in-up">
           <span className="text-white/80 font-medium tracking-widest text-sm uppercase mb-3 block">
-            The Collection
+            The Formulary
           </span>
           <h1 className="text-4xl md:text-6xl font-serif font-medium text-white mb-4">
-            Shop All Products
+            Clinical Skincare
           </h1>
           <p className="text-white/90 text-lg font-light max-w-xl mx-auto">
-            Curated essentials for the modern individual.
+            Science-backed formulations for every skin concern.
           </p>
         </div>
       </div>

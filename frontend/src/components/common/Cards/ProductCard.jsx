@@ -53,6 +53,12 @@ const ProductCard = ({ product }) => {
           <h3 className="text-primary font-serif font-medium text-lg mb-1 hover:text-accent transition-colors line-clamp-1">
             {product.title}
           </h3>
+          <p className="text-xs text-stone-500 mb-2 font-medium">
+             {product.subtitle || (product.category === "Serum" ? "Deep Repair & Hydration" : 
+              product.category === "Cleanser" ? "Gentle Purifying Wash" :
+              product.category === "Moisturizer" ? "Barrie Restoration Cream" :
+              "Clinical Skincare Formulation")}
+          </p>
         </Link>
 
         {/* Price */}
