@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuthStore } from "../../../store/useAuthStore";
+
 import { FiLogOut, FiUser, FiSettings, FiGrid, FiUsers } from "react-icons/fi";
 
 const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
-  const { authUser, role, Logout } = useAuth();
+  const { authUser, role, logout } = useAuthStore();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -25,10 +26,10 @@ const UserDropdown = () => {
 
   const handleLogout = async () => {
     try {
-      await Logout();
+      await logout();
       setIsOpen(false);
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error("logout error:", error);
     }
   };
 
@@ -117,7 +118,7 @@ const UserDropdown = () => {
               </div>
             )}
 
-            {/* Logout */}
+            {/* logout */}
             <div className="border-t border-stone-100 py-1">
               <button
                 onClick={handleLogout}

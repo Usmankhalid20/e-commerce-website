@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useProductStore } from "../store/useProductStore";
+
 import { Link } from "react-router-dom";
 import ProductCard from "../components/common/Cards/ProductCard";
 import Section from "../components/ui/Section";
@@ -7,17 +8,37 @@ import Button from "../components/ui/Button";
 import { Filter, ChevronDown } from "lucide-react";
 
 const Shop = () => {
-  const { products, fetchProducts } = useAuth();
+  const { products, fetchProducts, isLoading, error } = useProductStore();
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
-  if (!Array.isArray(products) || products.length === 0) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50">
          <p className="text-xl text-stone-500 font-serif mb-4">Loading our collection...</p>
          <div className="w-12 h-12 border-4 border-stone-200 border-t-primary rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4">
+        <div className="max-w-md rounded-lg border border-red-200 bg-red-50 px-6 py-5 text-center text-red-700">
+          {error}
+        </div>
+      </div>
+    );
+  }
+
+  if (!Array.isArray(products) || products.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4">
+        <div className="max-w-md rounded-lg border border-stone-200 bg-white px-6 py-5 text-center text-stone-600 shadow-sm">
+          No products found.
+        </div>
       </div>
     );
   }
@@ -65,7 +86,7 @@ const Shop = () => {
       <Section className="bg-white pt-8">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
           {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
+            <ProductCard key={product._id || product.id} product={product} />
           ))}
         </div>
       </Section>

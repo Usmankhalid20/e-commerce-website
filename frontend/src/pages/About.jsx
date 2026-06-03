@@ -131,18 +131,22 @@ const About = () => {
   );
 };
 
-const ValueCard = ({ icon: Icon, title, desc }) => (
-  <div className="text-center p-8 rounded-xl bg-white border border-stone-100 shadow-sm hover:shadow-md transition-all duration-300">
-    <div className="flex justify-center mb-6">
-      <div className="w-14 h-14 bg-stone-50 rounded-full flex items-center justify-center text-accent">
-         <Icon className="text-2xl" />
+const ValueCard = ({ icon, title, desc }) => {
+  const IconComponent = icon;
+
+  return (
+    <div className="text-center p-8 rounded-xl bg-white border border-stone-100 shadow-sm hover:shadow-md transition-all duration-300">
+      <div className="flex justify-center mb-6">
+        <div className="w-14 h-14 bg-stone-50 rounded-full flex items-center justify-center text-accent">
+           <IconComponent className="text-2xl" />
+        </div>
       </div>
+      <h3 className="text-xl font-serif font-medium text-primary mb-3">{title}</h3>
+      <p className="text-stone-500 leading-relaxed text-sm">
+        {desc}
+      </p>
     </div>
-    <h3 className="text-xl font-serif font-medium text-primary mb-3">{title}</h3>
-    <p className="text-stone-500 leading-relaxed text-sm">
-      {desc}
-    </p>
-  </div>
-);
+  );
+};
 
 export default About;

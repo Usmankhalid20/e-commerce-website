@@ -18,7 +18,8 @@ import {
   XCircle,
   AlertCircle,
 } from "lucide-react";
-// import { useAuth } from '../../context/AuthContext';
+// 
+
 import axiosInstance from "../../lib/axios";
 
 export default function UserPage() {
@@ -30,7 +31,7 @@ export default function UserPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  // const { getUsers } = useAuth();
+  // 
 
   // user data
   useEffect(() => {

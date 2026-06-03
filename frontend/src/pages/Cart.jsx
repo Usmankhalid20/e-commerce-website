@@ -1,10 +1,11 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext";
+import { useCartStore } from "../store/useCartStore";
+
 import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
-  const { cart, removeFromCart } = useAuth();
+  const { cart, removeFromCart } = useCartStore();
 
   // Subtotal Calculation
   const subtotal = cart.reduce(

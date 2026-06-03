@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useCartStore } from "../store/useCartStore";
+
 
 const CheckOut = () => {
-  const { cart } = useAuth();
+  const { cart } = useCartStore();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",

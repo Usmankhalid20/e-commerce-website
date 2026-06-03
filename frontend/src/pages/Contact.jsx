@@ -163,23 +163,31 @@ const Contact = () => {
   );
 };
 
-const ContactItem = ({ icon: Icon, title, content, sub }) => (
-  <div className="flex items-start">
-    <div className="flex-shrink-0 bg-white p-3 rounded-full text-accent shadow-sm">
-      <Icon className="h-5 w-5" />
-    </div>
-    <div className="ml-5">
-      <h3 className="text-lg font-medium text-primary">{title}</h3>
-      <p className="text-stone-600 mt-1">{content}</p>
-      {sub && <p className="text-sm text-stone-400 mt-1">{sub}</p>}
-    </div>
-  </div>
-);
+const ContactItem = ({ icon, title, content, sub }) => {
+  const IconComponent = icon;
 
-const SocialButton = ({ icon: Icon }) => (
-  <a href="#" className="bg-white hover:bg-accent hover:text-white text-stone-400 p-3 rounded-full transition-all duration-300 shadow-sm border border-stone-100">
-    <Icon className="h-5 w-5" />
-  </a>
-);
+  return (
+    <div className="flex items-start">
+      <div className="flex-shrink-0 bg-white p-3 rounded-full text-accent shadow-sm">
+        <IconComponent className="h-5 w-5" />
+      </div>
+      <div className="ml-5">
+        <h3 className="text-lg font-medium text-primary">{title}</h3>
+        <p className="text-stone-600 mt-1">{content}</p>
+        {sub && <p className="text-sm text-stone-400 mt-1">{sub}</p>}
+      </div>
+    </div>
+  );
+};
+
+const SocialButton = ({ icon }) => {
+  const IconComponent = icon;
+
+  return (
+    <a href="#" className="bg-white hover:bg-accent hover:text-white text-stone-400 p-3 rounded-full transition-all duration-300 shadow-sm border border-stone-100">
+      <IconComponent className="h-5 w-5" />
+    </a>
+  );
+};
 
 export default Contact;

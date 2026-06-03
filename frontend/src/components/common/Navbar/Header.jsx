@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Search, ShoppingBag, User } from "lucide-react";
-import { useAuth } from "../../../context/AuthContext";
+import { Menu, X, Search, ShoppingBag } from "lucide-react";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { useCartStore } from "../../../store/useCartStore";
+import Button from "../../ui/Button";
+
 import Profile from "./Profile";
-// import Button from "../../ui/Button";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  const { authUser, cart } = useAuth();
+  const { authUser } = useAuthStore();
+  const { cart } = useCartStore();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
@@ -25,7 +28,7 @@ const Header = () => {
   // Close mobile menu on route change
   useEffect(() => {
     setIsOpen(false);
-  }, [location]);
+  }, [location.pathname]);
 
   const navLinks = [
     { name: "Home", path: "/" },

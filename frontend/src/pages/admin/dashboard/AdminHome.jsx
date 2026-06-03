@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuthStore } from "../../../store/useAuthStore";
+
 import axiosInstance from "../../../lib/axios";
 import DashboardStats from "./components/DashboardStats";
 import DashboardCharts from "./components/DashboardCharts";
 
 export default function AdminHome() {
-  const { authUser, role, isCheckingAuth } = useAuth();
+  const { authUser, role, isCheckingAuth } = useAuthStore();
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalAdmins: 0,

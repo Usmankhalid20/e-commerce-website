@@ -1,7 +1,9 @@
 // src/pages/ProductPage.jsx
 import { useParams } from "react-router-dom";
 // import { cardData } from "../Constant/content"; // make sure this file exports the array
-import { useAuth } from "../context/AuthContext"; // your Zustand store
+import { useCartStore } from "../store/useCartStore";
+import { useProductStore } from "../store/useProductStore";
+ // your Zustand store
 import React from "react";
 import { Plus } from "lucide-react";
 import { Minus } from "lucide-react";
@@ -12,16 +14,8 @@ const ProductPage = () => {
    const { id } = useParams();
 
   // get state & actions from Zustand
-  const { 
-    products, 
-    fetchProducts, 
-    addToCart, 
-    quantity, 
-    increment, 
-    decrement, 
-    resetQuantity,
-    getProductById 
-  } = useAuth();
+  const { addToCart, quantity, increment, decrement, resetQuantity } = useCartStore();
+  const { products, fetchProducts, getProductById } = useProductStore();
 
   // fetch products if not already loaded
   useEffect(() => {
