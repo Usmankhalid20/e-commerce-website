@@ -1,245 +1,339 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Plus, Search, Edit3, Trash2, Package } from "lucide-react";
 import axiosInstance from "../../lib/axios";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
+import Card from "../ui/Card";
+import Modal from "../ui/Modal";
+import Badge from "../ui/Badge";
+import Skeleton from "../ui/Skeleton";
 
-const ListingPage = () => {
-  const [product, setProduct] = useState({
+export default function ListingPage() {
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+
+  // Modals state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  // Form State
+  const [formData, setFormData] = useState({
     title: "",
     description: "",
-    image: "",
-    price: 0,
-    mrp: 0, // ✅ added here
-    category: "",
-    inStock: 5,
+    price: "",
+    mrp: "",
+    discount: "0",
+    category: "cleanser",
+    inStock: "10",
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [formLoading, setFormLoading] = useState(false);
+  const [formMsg, setFormMsg] = useState({ error: "", success: "" });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProduct((prev) => ({
-      ...prev,
-      [name]:
-        name === "price" || name === "mrp" || name === "inStock"
-          ? Number(value)
-          : value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const fetchProducts = async () => {
+    setIsLoading(true);
     try {
-      const formData = new FormData();
-      formData.append("title", product.title);
-      formData.append("description", product.description);
-      formData.append("price", product.price);
-      formData.append("mrp", product.mrp);
-      formData.append("category", product.category);
-      formData.append("inStock", product.inStock);
-      formData.append("productImage", product.image); // 👈 file from input
-
-      const response = await axiosInstance.post("/adminAuth/listing", formData);
-
-      const data = response.data;
-
-      if (response.status === 200 || response.status === 201) {
-        setSuccessMessage("Product added successfully!");
-        // onAddProduct(data); // update UI
-      } else {
-        console.error("Error:", data.message);
-      }
-
-      // Reset form
-      setProduct({
-        title: "",
-        description: "",
-        image: "",
-        buttonText: "Buy Now",
-        price: 0,
-        mrp: 0,
-        category: "",
-        inStock: 5,
-      });
-
-      setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (error) {
-      console.error("Error adding product:", error);
+      const res = await axiosInstance.get("/admin/products");
+      const data = Array.isArray(res.data?.data) ? res.data.data : Array.isArray(res.data) ? res.data : [];
+      setProducts(data);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setProducts([]);
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
+  const handleCreateProduct = async (e) => {
+    e.preventDefault();
+    setFormLoading(true);
+    setFormMsg({ error: "", success: "" });
+
+    try {
+      const data = new FormData();
+      Object.keys(formData).forEach((key) => data.append(key, formData[key]));
+      if (imageFile) data.append("productImage", imageFile);
+
+      const res = await axiosInstance.post("/admin/listing", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (res.data?.success) {
+        setFormMsg({ error: "", success: "Product created successfully!" });
+        setFormData({ title: "", description: "", price: "", mrp: "", discount: "0", category: "cleanser", inStock: "10" });
+        setImageFile(null);
+        fetchProducts();
+        setTimeout(() => {
+          setShowAddModal(false);
+          setFormMsg({ error: "", success: "" });
+        }, 1200);
+      }
+    } catch (err) {
+      setFormMsg({ error: err.response?.data?.message || "Failed to create product.", success: "" });
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleUpdateProduct = async (e) => {
+    e.preventDefault();
+    if (!selectedProduct) return;
+    setFormLoading(true);
+    setFormMsg({ error: "", success: "" });
+
+    try {
+      const data = new FormData();
+      Object.keys(formData).forEach((key) => data.append(key, formData[key]));
+      if (imageFile) data.append("productImage", imageFile);
+
+      const res = await axiosInstance.put(`/admin/products/${selectedProduct._id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (res.data?.success) {
+        setFormMsg({ error: "", success: "Product updated successfully!" });
+        fetchProducts();
+        setTimeout(() => {
+          setShowEditModal(false);
+          setFormMsg({ error: "", success: "" });
+        }, 1200);
+      }
+    } catch (err) {
+      setFormMsg({ error: err.response?.data?.message || "Failed to update product.", success: "" });
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleDeleteProduct = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product listing?")) return;
+    try {
+      await axiosInstance.delete(`/admin/products/${id}`);
+      fetchProducts();
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to delete product.");
+    }
+  };
+
+  const openEditModal = (product) => {
+    setSelectedProduct(product);
+    setFormData({
+      title: product.title || "",
+      description: product.description || "",
+      price: product.price || "",
+      mrp: product.mrp || "",
+      discount: product.discount || "0",
+      category: product.category || "cleanser",
+      inStock: product.inStock || "0",
+    });
+    setImageFile(null);
+    setShowEditModal(true);
+  };
+
+  const filteredProducts = products.filter((p) => {
+    const matchesSearch = p.title?.toLowerCase().includes(search.toLowerCase()) || p.description?.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = categoryFilter === "all" || p.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Product Management
-        </h1>
-        <p className="text-gray-600">
-          Manage and monitor all product in your system
-        </p>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-slate-900">Product Listings</h1>
+          <p className="text-slate-500 text-sm mt-1">Manage catalog items, pricing, inventory & media uploads</p>
+        </div>
+        <Button onClick={() => {
+          setFormData({ title: "", description: "", price: "", mrp: "", discount: "0", category: "cleanser", inStock: "10" });
+          setImageFile(null);
+          setShowAddModal(true);
+        }}>
+          <Plus className="w-4 h-4" />
+          <span>Add New Product</span>
+        </Button>
       </div>
-      <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
 
-      {successMessage && (
-        <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
-          {successMessage}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Product Title
-            </label>
+      {/* Control Bar */}
+      <Card className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
+          <div className="relative w-full sm:w-80">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              name="title"
-              value={product.title}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category
-            </label>
-            <input
-              type="text"
-              name="category"
-              value={product.category}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="w-full sm:w-auto px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-blue-600"
+          >
+            <option value="all">All Categories</option>
+            <option value="cleanser">Cleanser</option>
+            <option value="serum">Serum</option>
+            <option value="moisturizer">Moisturizer</option>
+            <option value="sunscreen">Sunscreen</option>
+            <option value="toner">Toner</option>
+          </select>
         </div>
+      </Card>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <textarea
-            name="description"
-            value={product.description}
-            onChange={handleChange}
-            rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Upload Image
-          </label>
-
-          <div className="flex items-center justify-center w-full">
-            <label
-              htmlFor="file-upload"
-              className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
-            >
-              <svg
-                className="w-8 h-8 mb-2 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M7 16V8a4 4 0 018 0v8m-4 4h.01"
-                />
-              </svg>
-              <p className="text-sm text-gray-500">
-                <span className="font-semibold">Click to upload</span> or drag &
-                drop
-              </p>
-              <p className="text-xs text-gray-400">PNG, JPG, JPEG</p>
-              <input
-                id="file-upload"
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={(e) =>
-                  setProduct({ ...product, image: e.target.files[0] })
-                }
-                className="hidden"
-                required
-              />
-            </label>
+      {/* Products Table */}
+      <Card className="overflow-hidden">
+        {isLoading ? (
+          <div className="p-6 space-y-4">
+            {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-16 w-full" />)}
           </div>
-        </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead className="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Product</th>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Category</th>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Price</th>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Stock</th>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredProducts.map((p) => (
+                  <tr key={p._id} className="hover:bg-slate-50/80 transition-colors text-sm">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <img src={p.image} alt={p.title} className="w-12 h-12 rounded-xl object-cover bg-slate-100 shrink-0" />
+                        <div>
+                          <div className="font-bold text-slate-900 line-clamp-1">{p.title}</div>
+                          <div className="text-xs text-slate-500 line-clamp-1">{p.description}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Badge variant="primary">{p.category}</Badge>
+                    </td>
+                    <td className="px-6 py-4 font-black text-slate-900">
+                      RS. {p.price?.toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <Badge variant={p.inStock > 0 ? "success" : "danger"}>
+                        {p.inStock > 0 ? `${p.inStock} in stock` : "Out of stock"}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => openEditModal(p)}
+                          className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProduct(p._id)}
+                          className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
 
-         {/* Price + MRP + Stock */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      {/* Add Product Modal */}
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add Product Listing">
+        {formMsg.error && <div className="mb-4 p-3 bg-red-50 text-red-700 text-xs rounded-xl">{formMsg.error}</div>}
+        {formMsg.success && <div className="mb-4 p-3 bg-emerald-50 text-emerald-700 text-xs rounded-xl">{formMsg.success}</div>}
+
+        <form onSubmit={handleCreateProduct} className="space-y-4">
+          <Input label="Title" required value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Price (RS)
-            </label>
-            <input
-              type="number"
-              name="price"
-              value={product.price}
-              onChange={handleChange}
-              min="0"
-              step="1"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
+            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">Description</label>
+            <textarea required rows={3} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" />
           </div>
-
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Price (RS)" type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
+            <Input label="MRP (RS)" type="number" required value={formData.mrp} onChange={(e) => setFormData({ ...formData, mrp: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="In Stock" type="number" required value={formData.inStock} onChange={(e) => setFormData({ ...formData, inStock: e.target.value })} />
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">Category</label>
+              <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                <option value="cleanser">Cleanser</option>
+                <option value="serum">Serum</option>
+                <option value="moisturizer">Moisturizer</option>
+                <option value="sunscreen">Sunscreen</option>
+                <option value="toner">Toner</option>
+              </select>
+            </div>
+          </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              MRP (RS)
-            </label>
-            <input
-              type="number"
-              name="mrp"
-              value={product.mrp}
-              onChange={handleChange}
-              min="0"
-              step="1"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
+            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">Product Image</label>
+            <input type="file" accept="image/*" required onChange={(e) => setImageFile(e.target.files[0])} className="w-full text-xs text-slate-500" />
           </div>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button variant="outline" onClick={() => setShowAddModal(false)}>Cancel</Button>
+            <Button type="submit" isLoading={formLoading}>Create Product</Button>
+          </div>
+        </form>
+      </Modal>
 
+      {/* Edit Product Modal */}
+      <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)} title="Edit Product Listing">
+        {formMsg.error && <div className="mb-4 p-3 bg-red-50 text-red-700 text-xs rounded-xl">{formMsg.error}</div>}
+        {formMsg.success && <div className="mb-4 p-3 bg-emerald-50 text-emerald-700 text-xs rounded-xl">{formMsg.success}</div>}
+
+        <form onSubmit={handleUpdateProduct} className="space-y-4">
+          <Input label="Title" required value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Stock Quantity
-            </label>
-            <input
-              type="number"
-              name="inStock"
-              value={product.inStock}
-              onChange={handleChange}
-              min="0"
-              step="1"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
+            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">Description</label>
+            <textarea required rows={3} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" />
           </div>
-        </div>
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
-            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
-          {isSubmitting ? "Adding Product..." : "Add Product"}
-        </button>
-      </form>
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Price (RS)" type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
+            <Input label="MRP (RS)" type="number" required value={formData.mrp} onChange={(e) => setFormData({ ...formData, mrp: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="In Stock" type="number" required value={formData.inStock} onChange={(e) => setFormData({ ...formData, inStock: e.target.value })} />
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">Category</label>
+              <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                <option value="cleanser">Cleanser</option>
+                <option value="serum">Serum</option>
+                <option value="moisturizer">Moisturizer</option>
+                <option value="sunscreen">Sunscreen</option>
+                <option value="toner">Toner</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">Replace Image (Optional)</label>
+            <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} className="w-full text-xs text-slate-500" />
+          </div>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button variant="outline" onClick={() => setShowEditModal(false)}>Cancel</Button>
+            <Button type="submit" isLoading={formLoading}>Save Changes</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
-};
-
-export default ListingPage;
+}
