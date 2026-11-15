@@ -1,193 +1,120 @@
-import React from 'react';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaInstagram, FaFacebookF, FaTwitter } from 'react-icons/fa';
-import Section from '../components/ui/Section';
-import Button from '../components/ui/Button';
+import React, { useState } from "react";
+import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
+import Card from "../components/ui/Card";
 
-const Contact = () => {
-  return (
-    <>
-      {/* Hero Section */}
-      <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-stone-50 flex items-center justify-center text-center">
-        <div className="max-w-3xl mx-auto">
-          <span className="text-accent font-medium tracking-widest text-sm uppercase mb-4 block animate-fade-in">
-            Client Care
-          </span>
-          <h1 className="text-5xl md:text-7xl font-serif font-medium text-primary mb-6 leading-tight">
-            Talk to a Skin Expert
-          </h1>
-          <p className="text-xl text-stone-600 leading-relaxed font-light">
-            Whether you need routine advice or have questions about our formula, our team of specialists is here to help.
-          </p>
-        </div>
-      </section>
+export default function Contact() {
+  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+  const [submitted, setSubmitted] = useState(false);
 
-      {/* Contact Content */}
-      <Section className="bg-white">
-          <div className="lg:flex gap-16">
-            {/* Contact Form */}
-            <div className="lg:w-1/2 mb-16 lg:mb-0">
-              <div className="bg-white p-8 md:p-10 rounded-xl shadow-sm border border-stone-100">
-                <h2 className="text-3xl font-serif font-medium text-primary mb-8">Send Us a Message</h2>
-                <form className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-stone-500 mb-2 uppercase tracking-wide">
-                        Your Name
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        className="w-full px-0 py-3 border-b border-stone-300 focus:border-accent focus:ring-0 bg-transparent transition-colors placeholder-stone-300"
-                        placeholder="Enter your name"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-stone-500 mb-2 uppercase tracking-wide">
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        className="w-full px-0 py-3 border-b border-stone-300 focus:border-accent focus:ring-0 bg-transparent transition-colors placeholder-stone-300"
-                        placeholder="your@email.com"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-stone-500 mb-2 uppercase tracking-wide">
-                      Subject
-                    </label>
-                    <select
-                      id="subject"
-                      name="subject"
-                      className="w-full px-0 py-3 border-b border-stone-300 focus:border-accent focus:ring-0 bg-transparent transition-colors text-stone-600"
-                    >
-                      <option value="">Select a topic</option>
-                      <option value="product">Product Inquiry</option>
-                      <option value="order">Order Support</option>
-                      <option value="feedback">Feedback</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-stone-500 mb-2 uppercase tracking-wide">
-                      Your Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows="5"
-                      className="w-full px-0 py-3 border-b border-stone-300 focus:border-accent focus:ring-0 bg-transparent transition-colors placeholder-stone-300 resize-none"
-                      placeholder="How can we help you?"
-                    ></textarea>
-                  </div>
-                  
-                  <div className="pt-4">
-                    <Button type="submit" variant="primary" className="w-full md:w-auto">
-                      Send Message
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            </div>
-            
-            {/* Contact Info */}
-            <div className="lg:w-1/2">
-              <div className="bg-stone-50 p-8 md:p-10 rounded-xl h-full">
-                <h2 className="text-3xl font-serif font-medium text-primary mb-8">Contact Information</h2>
-                
-                <div className="space-y-8">
-                  <ContactItem 
-                    icon={FaPhone} 
-                    title="Phone" 
-                    content="+1 (555) 123-4567" 
-                    sub="Monday-Friday, 9am-5pm EST" 
-                  />
-                  <ContactItem 
-                    icon={FaEnvelope} 
-                    title="Email" 
-                    content="hello@onedrop.com" 
-                    sub="We typically reply within 24 hours" 
-                  />
-                  <ContactItem 
-                    icon={FaMapMarkerAlt} 
-                    title="Headquarters" 
-                    content="123 Beauty Avenue" 
-                    sub="New York, NY 10001" 
-                  />
-                </div>
-                
-                <div className="mt-12 pt-12 border-t border-stone-200">
-                  <h3 className="text-lg font-medium text-primary mb-6">Follow Us</h3>
-                  <div className="flex space-x-4">
-                    <SocialButton icon={FaInstagram} />
-                    <SocialButton icon={FaFacebookF} />
-                    <SocialButton icon={FaTwitter} />
-                  </div>
-                </div>
-                
-                <div className="mt-12 bg-white p-6 rounded-lg border border-stone-100 shadow-sm">
-                  <h3 className="text-lg font-serif font-medium text-primary mb-3">Skincare Advice</h3>
-                  <p className="text-stone-600 mb-4 text-sm leading-relaxed">
-                    Need personalized skincare advice? Our dermatology experts are available for consultations.
-                  </p>
-                  <button className="text-accent hover:text-primary font-medium flex items-center text-sm transition-colors">
-                    Book a Consultation
-                    <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-      </Section>
-      
-      {/* Map Section */}
-      <section className="w-full h-96 bg-stone-100 grayscale hover:grayscale-0 transition-all duration-700">
-        <iframe
-          title="One Drop Headquarters"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215573291234!2d-73.98784492416446!3d40.7484409713898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1623251234567!5m2!1sen!2sus"
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          allowFullScreen=""
-          loading="lazy"
-        ></iframe>
-      </section>
-    </>
-  );
-};
-
-const ContactItem = ({ icon, title, content, sub }) => {
-  const IconComponent = icon;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setFormData({ name: "", email: "", subject: "", message: "" });
+    setTimeout(() => setSubmitted(false), 3000);
+  };
 
   return (
-    <div className="flex items-start">
-      <div className="flex-shrink-0 bg-white p-3 rounded-full text-accent shadow-sm">
-        <IconComponent className="h-5 w-5" />
+    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Get in Touch</h1>
+        <p className="text-slate-500 text-sm">Have questions about your skincare routine or an existing order? We are here to help!</p>
       </div>
-      <div className="ml-5">
-        <h3 className="text-lg font-medium text-primary">{title}</h3>
-        <p className="text-stone-600 mt-1">{content}</p>
-        {sub && <p className="text-sm text-stone-400 mt-1">{sub}</p>}
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        {/* Contact Info */}
+        <div className="space-y-6">
+          <Card className="p-6 space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                <Mail className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-slate-400 uppercase">Email Support</h4>
+                <p className="text-sm font-semibold text-slate-900">hello@onedrop.com</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
+                <Phone className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-slate-400 uppercase">Customer Care</h4>
+                <p className="text-sm font-semibold text-slate-900">+92 (042) 111-ONE-DROP</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+              <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center shrink-0">
+                <MapPin className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-slate-400 uppercase">Headquarters</h4>
+                <p className="text-sm font-semibold text-slate-900">Gulberg III, Lahore, Pakistan</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Contact Form */}
+        <Card className="lg:col-span-2 p-8">
+          {submitted && (
+            <div className="mb-6 p-4 bg-emerald-50 text-emerald-700 text-sm font-medium rounded-xl border border-emerald-200 flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5" />
+              <span>Thank you! Your message has been sent. We will respond within 24 hours.</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input
+                label="Your Name"
+                required
+                placeholder="Jane Doe"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+              <Input
+                label="Email Address"
+                type="email"
+                required
+                placeholder="jane@example.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
+
+            <Input
+              label="Subject"
+              required
+              placeholder="e.g. Order Inquiry / Routine Advice"
+              value={formData.subject}
+              onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+            />
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                Message
+              </label>
+              <textarea
+                required
+                rows={5}
+                placeholder="How can our skincare specialists assist you?"
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+              />
+            </div>
+
+            <Button type="submit" size="lg" className="w-full sm:w-auto shadow-lg shadow-blue-600/20">
+              <Send className="w-4 h-4" />
+              <span>Send Message</span>
+            </Button>
+          </form>
+        </Card>
       </div>
     </div>
   );
-};
-
-const SocialButton = ({ icon }) => {
-  const IconComponent = icon;
-
-  return (
-    <a href="#" className="bg-white hover:bg-accent hover:text-white text-stone-400 p-3 rounded-full transition-all duration-300 shadow-sm border border-stone-100">
-      <IconComponent className="h-5 w-5" />
-    </a>
-  );
-};
-
-export default Contact;
+}
