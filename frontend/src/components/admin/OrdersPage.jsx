@@ -1,367 +1,189 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { ShoppingCart, Search, Filter, Eye, CheckCircle2 } from "lucide-react";
+import axiosInstance from "../../lib/axios";
+import Card from "../ui/Card";
+import Badge from "../ui/Badge";
+import Modal from "../ui/Modal";
+import Skeleton from "../ui/Skeleton";
 
-const OrdersPage = () => {
-  const [orders, setOrders] = useState([
-    {
-      id: "ORD-1001",
-      date: "2023-08-15T10:30:00",
-      customer: {
-        name: "Priya Sharma",
-        email: "priya.sharma@example.com",
-        phone: "+91 9876543210",
-        address: "123 Main St, Mumbai, Maharashtra 400001"
-      },
-      items: [
-        {
-          id: "1",
-          name: "HydraBoost Serum",
-          category: "Hydration",
-          price: 899,
-          quantity: 2,
-          image: "https://i.pinimg.com/736x/6e/db/b3/6edbb36883dbf3d78204803e81bda280.jpg"
-        }
-      ],
-      amount: 1798,
-      shippingCost: 50,
-      tax: 180,
-      status: "delivered",
-      payment: {
-        method: "Credit Card",
-        status: "paid"
-      }
-    },
-    {
-      id: "ORD-1000",
-      date: "2023-08-14T14:45:00",
-      customer: {
-        name: "Rahul Patel",
-        email: "rahul.patel@example.com",
-        phone: "+91 8765432109",
-        address: "456 Oak Ave, Bangalore, Karnataka 560001"
-      },
-      items: [
-        {
-          id: "1",
-          name: "HydraBoost Serum",
-          category: "Hydration",
-          price: 899,
-          quantity: 1,
-          image: "https://i.pinimg.com/736x/6e/db/b3/6edbb36883dbf3d78204803e81bda280.jpg"
-        }
-      ],
-      amount: 899,
-      shippingCost: 50,
-      tax: 90,
-      status: "shipped",
-      payment: {
-        method: "UPI",
-        status: "paid"
-      }
-    },
-    {
-      id: "ORD-999",
-      date: "2023-08-12T09:15:00",
-      customer: {
-        name: "Ananya Gupta",
-        email: "ananya.gupta@example.com",
-        phone: "+91 7654321098",
-        address: "789 Pine Rd, Delhi, Delhi 110001"
-      },
-      items: [
-        {
-          id: "1",
-          name: "HydraBoost Serum",
-          category: "Hydration",
-          price: 899,
-          quantity: 1,
-          image: "https://i.pinimg.com/736x/6e/db/b3/6edbb36883dbf3d78204803e81bda280.jpg"
-        }
-      ],
-      amount: 899,
-      shippingCost: 50,
-      tax: 90,
-      status: "processing",
-      payment: {
-        method: "Net Banking",
-        status: "paid"
-      }
-    },
-    {
-      id: "ORD-998",
-      date: "2023-08-10T16:20:00",
-      customer: {
-        name: "Vikram Singh",
-        email: "vikram.singh@example.com",
-        phone: "+91 6543210987",
-        address: "321 Elm St, Hyderabad, Telangana 500001"
-      },
-      items: [
-        {
-          id: "1",
-          name: "HydraBoost Serum",
-          category: "Hydration",
-          price: 899,
-          quantity: 1,
-          image: "https://i.pinimg.com/736x/6e/db/b3/6edbb36883dbf3d78204803e81bda280.jpg"
-        }
-      ],
-      amount: 899,
-      shippingCost: 50,
-      tax: 90,
-      status: "pending",
-      payment: {
-        method: "COD",
-        status: "pending"
-      }
-    }
-  ]);
-
+export default function OrdersPage() {
+  const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("all");
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
-  const handleUpdateOrderStatus = (orderId, newStatus) => {
-    setOrders(prev => 
-      prev.map(order => 
-        order.id === orderId ? { ...order, status: newStatus } : order
-      )
-    );
-    if (selectedOrder && selectedOrder.id === orderId) {
-      setSelectedOrder({ ...selectedOrder, status: newStatus });
+  useEffect(() => {
+    fetchOrders();
+  }, [statusFilter]);
+
+  const fetchOrders = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get(`/admin/orders?status=${statusFilter}`);
+      const data = Array.isArray(res.data?.data) ? res.data.data : Array.isArray(res.data) ? res.data : [];
+      setOrders(data);
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+      setOrders([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Filter orders based on status and search query
-  const filteredOrders = orders.filter(order => {
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    const matchesSearch = 
-      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.customer.email.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    try {
+      await axiosInstance.put(`/admin/orders/${orderId}/status`, { orderStatus: newStatus });
+      fetchOrders();
+      if (selectedOrder && selectedOrder._id === orderId) {
+        setSelectedOrder({ ...selectedOrder, orderStatus: newStatus });
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to update order status.");
+    }
+  };
 
   return (
-    <div className="p-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <h1 className="text-2xl font-bold">Orders Management</h1>
-        
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-          <div className="relative">
+    <div className="space-y-8">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-extrabold text-slate-900">Order Management</h1>
+        <p className="text-slate-500 text-sm mt-1">Track customer purchases, fulfillment status & shipping updates</p>
+      </div>
+
+      {/* Control Bar */}
+      <Card className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-slate-400" />
+            <span className="text-xs font-bold text-slate-700 uppercase">Filter Status:</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500"
+              className="px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800"
             >
-              <option value="all">All Statuses</option>
+              <option value="all">All Orders</option>
               <option value="pending">Pending</option>
               <option value="processing">Processing</option>
               <option value="shipped">Shipped</option>
               <option value="delivered">Delivered</option>
               <option value="cancelled">Cancelled</option>
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-              </svg>
-            </div>
           </div>
-          
-          <input
-            type="text"
-            placeholder="Search orders..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-          />
-        </div>
-      </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{order.customer.name}</div>
-                    <div className="text-sm text-gray-500">{order.customer.email}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(order.date).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{order.amount.toLocaleString()}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
-                      order.status === 'shipped' ? 'bg-indigo-100 text-indigo-800' :
-                      order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button
-                      onClick={() => setSelectedOrder(order)}
-                      className="text-blue-600 hover:text-blue-900 mr-3"
-                    >
-                      View
-                    </button>
-                  </td>
+          <div className="text-xs text-slate-500 font-medium">
+            Showing <span className="font-bold text-slate-900">{orders.length}</span> orders
+          </div>
+        </div>
+      </Card>
+
+      {/* Orders Table */}
+      <Card className="overflow-hidden">
+        {isLoading ? (
+          <div className="p-6 space-y-4">
+            {[1, 2, 3].map((i) => <Skeleton key={i} className="h-16 w-full" />)}
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead className="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Order ID</th>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Customer</th>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Total</th>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Status</th>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Date</th>
+                  <th className="px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {orders.map((order) => (
+                  <tr key={order._id} className="hover:bg-slate-50/80 transition-colors text-sm">
+                    <td className="px-6 py-4 font-mono font-bold text-slate-900">
+                      {order._id.substring(0, 8)}...
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="font-bold text-slate-900">{order.shippingInfo?.fullName}</div>
+                      <div className="text-xs text-slate-500">{order.shippingInfo?.email}</div>
+                    </td>
+                    <td className="px-6 py-4 font-black text-slate-900">
+                      RS. {order.total?.toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <select
+                        value={order.orderStatus}
+                        onChange={(e) => handleUpdateStatus(order._id, e.target.value)}
+                        className="px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-800"
+                      >
+                        <option value="pending">PENDING</option>
+                        <option value="processing">PROCESSING</option>
+                        <option value="shipped">SHIPPED</option>
+                        <option value="delivered">DELIVERED</option>
+                        <option value="cancelled">CANCELLED</option>
+                      </select>
+                    </td>
+                    <td className="px-6 py-4 text-xs text-slate-600 font-medium">
+                      {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A"}
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => {
+                          setSelectedOrder(order);
+                          setShowModal(true);
+                        }}
+                        className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        title="View Order Details"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-      {/* Order Details Modal */}
-      {selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-start">
-                <h2 className="text-xl font-bold">Order Details - {selectedOrder.id}</h2>
-                <button
-                  onClick={() => setSelectedOrder(null)}
-                  className="text-gray-400 hover:text-gray-500"
-                >
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+            {orders.length === 0 && (
+              <div className="text-center py-12 text-slate-500 text-sm">
+                No order records found for this status.
               </div>
+            )}
+          </div>
+        )}
+      </Card>
 
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Customer Information</h3>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm"><span className="font-medium">Name:</span> {selectedOrder.customer.name}</p>
-                    <p className="text-sm mt-1"><span className="font-medium">Email:</span> {selectedOrder.customer.email}</p>
-                    <p className="text-sm mt-1"><span className="font-medium">Phone:</span> {selectedOrder.customer.phone}</p>
-                    <p className="text-sm mt-1"><span className="font-medium">Address:</span> {selectedOrder.customer.address}</p>
-                  </div>
-                </div>
+      {/* View Order Modal */}
+      {showModal && selectedOrder && (
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Order Details" maxWidth="max-w-lg">
+          <div className="space-y-4 text-sm">
+            <div className="p-3 bg-slate-50 rounded-xl space-y-1 text-xs">
+              <p><span className="font-bold text-slate-700">Order ID:</span> <span className="font-mono">{selectedOrder._id}</span></p>
+              <p><span className="font-bold text-slate-700">Payment Method:</span> <span className="uppercase">{selectedOrder.paymentMethod}</span></p>
+              <p><span className="font-bold text-slate-700">Shipping Address:</span> {selectedOrder.shippingInfo?.address}, {selectedOrder.shippingInfo?.city}, {selectedOrder.shippingInfo?.country}</p>
+              <p><span className="font-bold text-slate-700">Phone:</span> {selectedOrder.shippingInfo?.phone}</p>
+            </div>
 
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Order Summary</h3>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="flex justify-between text-sm">
-                      <span>Date:</span>
-                      <span>{new Date(selectedOrder.date).toLocaleString()}</span>
+            <div>
+              <h4 className="font-bold text-slate-900 mb-2 text-xs uppercase tracking-wider">Ordered Items</h4>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {selectedOrder.items?.map((item, idx) => (
+                  <div key={idx} className="flex justify-between items-center p-2 bg-white rounded-lg border border-slate-100 text-xs">
+                    <div>
+                      <p className="font-bold text-slate-900">{item.title}</p>
+                      <p className="text-slate-500">Qty: {item.quantity} x RS. {item.price?.toLocaleString()}</p>
                     </div>
-                    <div className="flex justify-between text-sm mt-1">
-                      <span>Status:</span>
-                      <div className="relative">
-                        <select
-                          value={selectedOrder.status}
-                          onChange={(e) => handleUpdateOrderStatus(selectedOrder.id, e.target.value)}
-                          className="block appearance-none bg-white border border-gray-300 text-gray-700 py-1 px-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500"
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="processing">Processing</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="delivered">Delivered</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-between text-sm mt-1">
-                      <span>Payment Method:</span>
-                      <span>{selectedOrder.payment.method}</span>
-                    </div>
-                    <div className="flex justify-between text-sm mt-1">
-                      <span>Payment Status:</span>
-                      <span className={`font-medium ${
-                        selectedOrder.payment.status === 'paid' ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {selectedOrder.payment.status.charAt(0).toUpperCase() + selectedOrder.payment.status.slice(1)}
-                      </span>
-                    </div>
+                    <span className="font-black text-slate-900">RS. {item.subtotal?.toLocaleString()}</span>
                   </div>
-                </div>
-              </div>
-
-              <div className="mt-6">
-                <h3 className="font-medium text-gray-900 mb-2">Order Items</h3>
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {selectedOrder.items.map((item, index) => (
-                        <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 h-10 w-10">
-                                <img className="h-10 w-10 rounded object-cover" src={item.image} alt={item.name} />
-                              </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">{item.name}</div>
-                                <div className="text-sm text-gray-500">{item.category}</div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{item.price}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.quantity}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{item.price * item.quantity}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end">
-                <div className="bg-gray-50 p-4 rounded-lg w-full md:w-1/3">
-                  <div className="flex justify-between text-sm">
-                    <span>Subtotal:</span>
-                    <span>₹{selectedOrder.amount.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-sm mt-1">
-                    <span>Shipping:</span>
-                    <span>₹{selectedOrder.shippingCost.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between text-sm mt-1">
-                    <span>Tax:</span>
-                    <span>₹{selectedOrder.tax.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between font-medium text-gray-900 mt-2 pt-2 border-t border-gray-200">
-                    <span>Total:</span>
-                    <span>₹{(selectedOrder.amount + selectedOrder.shippingCost + selectedOrder.tax).toLocaleString()}</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
+
+            <div className="pt-3 border-t border-slate-100 flex justify-between font-extrabold text-slate-900">
+              <span>Total Paid:</span>
+              <span className="text-base text-blue-600">RS. {selectedOrder.total?.toLocaleString()}</span>
+            </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );
-};
-
-export default OrdersPage;
+}
