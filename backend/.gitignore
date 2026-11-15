@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+
+# Environment variables — NEVER commit
+.env
+.env.local
+.env.production
+
+# Uploaded files — store in cloud in production
+uploads/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
