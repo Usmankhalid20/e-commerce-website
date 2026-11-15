@@ -1,22 +1,23 @@
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export const useCartStore = create(
   persist(
     (set) => ({
       cart: [],
-      quantity: 1,
 
-      addToCart: (product, quantity) =>
+      addToCart: (product, quantity = 1) =>
         set((state) => {
+          // Normalize ID — MongoDB uses _id; fallback to id for compatibility
+          const productId = product._id || product.id;
           const existingItem = state.cart.find(
-            (item) => item._id === product._id || item.id === product.id
+            (item) => (item._id || item.id) === productId
           );
 
           if (existingItem) {
             return {
               cart: state.cart.map((item) =>
-                item._id === product._id || item.id === product.id
+                (item._id || item.id) === productId
                   ? { ...item, quantity: item.quantity + quantity }
                   : item
               ),
@@ -30,25 +31,23 @@ export const useCartStore = create(
 
       removeFromCart: (id) =>
         set((state) => ({
-          cart: state.cart.filter((item) => item._id !== id && item.id !== id),
+          // Use _id or id consistently
+          cart: state.cart.filter((item) => (item._id || item.id) !== id),
         })),
 
-      increment: (inStock) =>
+      updateQuantity: (id, quantity) =>
         set((state) => ({
-          quantity: state.quantity < inStock ? state.quantity + 1 : state.quantity,
+          cart: state.cart.map((item) =>
+            (item._id || item.id) === id
+              ? { ...item, quantity: Math.max(1, quantity) }
+              : item
+          ),
         })),
 
-      decrement: () =>
-        set((state) => ({
-          quantity: state.quantity > 1 ? state.quantity - 1 : 1,
-        })),
-
-      setQuantity: (qty) => set({ quantity: qty }),
-
-      resetQuantity: () => set({ quantity: 1 }),
+      clearCart: () => set({ cart: [] }),
     }),
     {
-      name: "onedrop-cart",
+      name: 'onedrop-cart',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ cart: state.cart }),
     }
