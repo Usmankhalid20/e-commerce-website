@@ -2,28 +2,24 @@ import { create } from "zustand";
 import axiosInstance from "../lib/axios";
 import toast from "react-hot-toast";
 
-const getUserFromResponse = (payload) =>
-  payload?.data?.user ?? payload?.data ?? payload?.user ?? payload ?? null;
-
 export const useAuthStore = create((set, get) => ({
   authUser: null,
   role: null,
   isCheckingAuth: true,
   isSigningUp: false,
-  isSigninIn: false,
+  isSigningIn: false,
   isLoggingOut: false,
   error: null,
 
   checkAuth: async () => {
     try {
-      const res = await axiosInstance.get("/auth/check");
-      const user = getUserFromResponse(res.data);
-      set({ 
+      const res = await axiosInstance.get('/auth/check');
+      const user = res.data?.data ?? null;
+      set({
         authUser: user,
-        role: user?.role
+        role: user?.role ?? null,
       });
-    } catch (error) {
-      console.log("Error in checkAuth:", error);
+    } catch {
       set({ authUser: null, role: null });
     } finally {
       set({ isCheckingAuth: false });
@@ -33,48 +29,47 @@ export const useAuthStore = create((set, get) => ({
   signup: async (data) => {
     set({ isSigningUp: true, error: null });
     try {
-      const res = await axiosInstance.post("/auth/signup", data);
-      const user = getUserFromResponse(res.data);
-      set({ authUser: user, role: user?.role });
-      toast.success("Account Created Successfully");
-      return user;
+      const res = await axiosInstance.post('/auth/signup', data);
+      const user = res.data?.data ?? null;
+      set({ authUser: user, role: user?.role ?? null });
+      toast.success('Account Created Successfully');
+      return { success: true, user };
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Error in Signup";
+      const errorMessage = error.response?.data?.message || 'Error in Signup';
       set({ error: errorMessage });
       toast.error(errorMessage);
-      return null;
+      return { success: false, error: errorMessage };
     } finally {
       set({ isSigningUp: false });
     }
   },
 
   login: async (data) => {
-    set({ isSigninIn: true, error: null });
+    set({ isSigningIn: true, error: null });
     try {
-      const res = await axiosInstance.post("/auth/login", data);
-      const user = getUserFromResponse(res.data);
-      set({ authUser: user, role: user?.role });
-      toast.success("Logged in Successfully");
-      return user;
+      const res = await axiosInstance.post('/auth/login', data);
+      const user = res.data?.data ?? null;
+      set({ authUser: user, role: user?.role ?? null });
+      toast.success('Logged in Successfully');
+      return { success: true, user };
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Error in Login";
+      const errorMessage = error.response?.data?.message || 'Error in Login';
       set({ authUser: null, role: null, error: errorMessage });
       toast.error(errorMessage);
-      return null;
+      return { success: false, error: errorMessage };
     } finally {
-      set({ isSigninIn: false });
+      set({ isSigningIn: false });
     }
   },
 
   logout: async () => {
     set({ isLoggingOut: true });
     try {
-      await axiosInstance.post("/auth/logout");
+      await axiosInstance.post('/auth/logout');
       set({ authUser: null, role: null });
-      toast.success("Logged out Successfully");
-    } catch (error) {
-      console.log("Error in Logout:", error);
-      toast.error("Error in Logout");
+      toast.success('Logged out Successfully');
+    } catch {
+      toast.error('Error in Logout');
     } finally {
       set({ isLoggingOut: false });
     }
@@ -85,12 +80,11 @@ export const useAuthStore = create((set, get) => ({
       const userId = get().authUser?._id;
       if (!userId) return;
       const res = await axiosInstance.put(`/auth/updateProfile/${userId}`, updateUser);
-      const user = getUserFromResponse(res.data);
+      const user = res.data?.data ?? null;
       set({ authUser: user, role: user?.role ?? get().role });
-      toast.success("Profile Updated Successfully");
+      toast.success('Profile Updated Successfully');
     } catch (error) {
-      console.log("Error updating profile:", error);
-      toast.error(error.response?.data?.message || "Error updating profile");
+      toast.error(error.response?.data?.message || 'Error updating profile');
     }
   },
 }));
