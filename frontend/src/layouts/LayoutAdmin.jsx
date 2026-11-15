@@ -1,25 +1,23 @@
-import React from "react";
-import AdminNavbar from "../pages/admin/AdminNavbar";
+import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "../pages/admin/dashboard/Sidebar";
+import AdminSidebar from "../components/layout/AdminSidebar";
+import AdminHeader from "../components/layout/AdminHeader";
 
-const Layout = () => {
+export default function LayoutAdmin() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
-    <div className="flex flex-col h-screen">
-      {/* Top Navbar */}
-      <AdminNavbar />
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Sidebar Navigation */}
+      <AdminSidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
 
-      <div className="flex flex-1">
-        {/* Sidebar on the left */}
-        <Sidebar />
-
-        {/* Main content area */}
-        <main className="flex-1 p-4 overflow-y-auto">
+      {/* Main Administrative Viewport */}
+      <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
+        <AdminHeader setMobileOpen={setMobileOpen} />
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>
     </div>
   );
-};
-
-export default Layout;
+}
