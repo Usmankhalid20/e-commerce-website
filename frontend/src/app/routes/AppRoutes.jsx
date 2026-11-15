@@ -1,6 +1,8 @@
-import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import ProtectedRoute from "../../lib/ProtectedRoute";
+import React, { lazy, Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
+import PublicOnlyRoute from "./PublicOnlyRoute";
 import PageLoader from "../../components/shared/PageLoader";
 
 const LayoutUser = lazy(() => import("../../layouts/LayoutUser"));
@@ -22,21 +24,19 @@ const ListingPage = lazy(() => import("../../components/admin/ListingPage"));
 const OrdersPage = lazy(() => import("../../components/admin/OrdersPage"));
 const Unauthorized = lazy(() => import("../../pages/admin/auth/Unauthorized"));
 
-const AppRoutes = ({ authUser }) => {
+const AppRoutes = () => {
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
-        <Route
-          path="/signup"
-          element={!authUser ? <SignUp /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/login"
-          element={!authUser ? <Login /> : <Navigate to="/" replace />}
-        />
+        {/* Auth Routes — Public Only */}
+        <Route element={<PublicOnlyRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Route>
 
         <Route path="/admin/unauthorized" element={<Unauthorized />} />
 
+        {/* Public Store Routes */}
         <Route element={<LayoutUser />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -44,6 +44,7 @@ const AppRoutes = ({ authUser }) => {
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/contact" element={<Contact />} />
 
+          {/* Protected Customer Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<CheckOut />} />
@@ -51,12 +52,13 @@ const AppRoutes = ({ authUser }) => {
           </Route>
         </Route>
 
+        {/* Admin Portal Routes */}
         <Route
           path="/admin"
           element={
-            <ProtectedRoute requiredRole="admin">
+            <AdminRoute>
               <LayoutAdmin />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         >
           <Route index element={<AdminHome />} />
