@@ -8,10 +8,17 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Optionally handle global errors like 401 here if needed.
-    // e.g., if (error.response && error.response.status === 401) { window.location.href = '/login'; }
+    // Auto-redirect to login when session expires (401 Unauthorized)
+    if (error.response?.status === 401) {
+      const currentPath = window.location.pathname;
+      // Avoid redirect loop on the login page itself
+      if (currentPath !== '/login' && currentPath !== '/signup') {
+        window.location.href = '/login';
+      }
+    }
     return Promise.reject(error);
   }
 );
 
 export default axiosInstance;
+
