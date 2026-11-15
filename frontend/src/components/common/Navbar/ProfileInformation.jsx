@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuthStore } from "../../../store/useAuthStore";
+
 import { useEffect } from 'react';
 
 const ProfileInformation = () => {
-  const { updatedUserProfile, authUser } = useAuth();
+  const { updateProfile, authUser } = useAuthStore();
   
   const [formData, setFormData] = useState({
     fullName: authUser?.fullName || '',
@@ -83,7 +84,7 @@ const ProfileInformation = () => {
         console.log(key, value);
       }
 
-      await updatedUserProfile(formDataToSend);
+      await updateProfile(formDataToSend);
     } catch (error) {
       console.log("Submit error:", error);
       setErrors({ submit: 'Failed to update profile. Please try again.' });

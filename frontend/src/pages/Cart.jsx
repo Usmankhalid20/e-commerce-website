@@ -1,97 +1,154 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext";
-import { RxCross2 } from "react-icons/rx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Trash2, ShoppingBag, ArrowRight, Minus, Plus } from "lucide-react";
+import { useCartStore } from "../store/useCartStore";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
+import EmptyState from "../components/ui/EmptyState";
 
-const Cart = () => {
-  const { cart, removeFromCart } = useAuth();
+export default function Cart() {
+  const { cart, removeFromCart, updateQuantity, clearCart } = useCartStore();
+  const navigate = useNavigate();
 
-  // Subtotal Calculation
-  const subtotal = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  const subtotal = cart.reduce((acc, item) => acc + (item.price || 0) * (item.quantity || 1), 0);
+  const shippingThreshold = 10000;
+  const shippingCost = subtotal >= shippingThreshold || subtotal === 0 ? 0 : 200;
+  const total = subtotal + shippingCost;
+
+  if (cart.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto py-16 px-4">
+        <EmptyState
+          icon={ShoppingBag}
+          title="Your Cart is Empty"
+          description="Looks like you haven't added any skincare products to your bag yet."
+          action={
+            <Link to="/shop">
+              <Button size="lg" className="shadow-lg shadow-blue-600/20">
+                <span>Start Shopping</span>
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full min-h-screen py-4 px-2 sm:px-4">
-      <div className="max-w-7xl bg-white min-h-[70vh] mt-20 px-4 sm:px-8 py-6 mx-auto rounded-lg shadow-md">
-        <h1 className="text-lg sm:text-xl font-bold mb-4">Cart</h1>
+    <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-extrabold text-slate-900 mb-8">Shopping Bag ({cart.length})</h1>
 
-        {cart.length === 0 ? (
-          <p className="text-center text-gray-500">Your cart is empty</p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300 text-sm sm:text-base">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-2 sm:px-4 py-2">Image</th>
-                  <th className="px-2 sm:px-4 py-2">Product</th>
-                  <th className="px-2 sm:px-4 py-2">Price</th>
-                  <th className="px-2 sm:px-4 py-2">Quantity</th>
-                  <th className="px-2 sm:px-4 py-2">Total</th>
-                  <th className="px-2 sm:px-4 py-2">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cart.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="text-center border border-gray-300"
-                  >
-                    <td className="px-2 sm:px-4 py-2">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-12 h-12 sm:w-16 sm:h-16 object-cover mx-auto rounded"
-                      />
-                    </td>
-                    <td className="px-2 sm:px-4 py-2">{item.title}</td>
-                    <td className="px-2 sm:px-4 py-2">RS. {item.price.toFixed(2)}</td>
-                    <td className="px-2 sm:px-4 py-2">{item.quantity}</td>
-                    <td className="px-2 sm:px-4 py-2">
-                      RS. {(item.price * item.quantity).toFixed(2)}
-                    </td>
-                    <td className="px-2 sm:px-4 py-2">
-                      <RxCross2
-                        className="text-lg sm:text-xl text-red-500 cursor-pointer hover:text-red-700 mx-auto"
-                        onClick={() => removeFromCart(item.id)}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Cart Items List */}
+        <div className="lg:col-span-2 space-y-4">
+          {cart.map((item) => {
+            const itemId = item._id || item.id;
+            return (
+              <Card key={itemId} className="p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover bg-slate-100 shrink-0"
+                />
 
-            {/* Subtotal Section */}
-            <div className="w-full flex flex-col sm:flex-row sm:justify-end mt-8 px-0 sm:px-4">
-              <div className="w-full sm:w-96 text-black rounded-lg shadow-lg p-4 sm:p-6 bg-gray-50">
-                {/* Cart Heading */}
-                <h1 className="text-lg sm:text-2xl font-bold border-b border-gray-300 pb-2 mb-4">
-                  Cart Summary
-                </h1>
-
-                {/* Subtotal */}
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-base sm:text-lg font-medium">Subtotal:</span>
-                  <span className="text-lg sm:text-xl font-bold">
-                    RS. {subtotal.toFixed(2)}
+                <div className="flex-1 min-w-0 text-center sm:text-left">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                    {item.category || "Skincare"}
                   </span>
+                  <h3 className="font-bold text-slate-900 text-base mt-1 truncate">{item.title}</h3>
+                  <p className="text-xs text-slate-500 font-medium">RS. {item.price?.toLocaleString()} each</p>
                 </div>
 
-                {/* Buy Now Button */}
-                <Link
-                  to="/checkout"
-                  className="block w-full text-center bg-green-400 hover:bg-green-500 text-black hover:text-white font-semibold py-3 rounded-lg shadow-md transition-all duration-300"
-                >
-                  Buy Now
-                </Link>
-              </div>
-            </div>
+                <div className="flex items-center gap-4">
+                  {/* Quantity Controls */}
+                  <div className="flex items-center border border-slate-200 rounded-xl bg-white">
+                    <button
+                      onClick={() => updateQuantity(itemId, Math.max(1, item.quantity - 1))}
+                      className="p-1.5 text-slate-600 hover:text-slate-900"
+                    >
+                      <Minus className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="px-3 text-xs font-bold text-slate-900">{item.quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(itemId, item.quantity + 1)}
+                      className="p-1.5 text-slate-600 hover:text-slate-900"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Subtotal */}
+                  <span className="font-extrabold text-slate-900 text-sm w-24 text-right">
+                    RS. {((item.price || 0) * (item.quantity || 1)).toLocaleString()}
+                  </span>
+
+                  {/* Remove Button */}
+                  <button
+                    onClick={() => removeFromCart(itemId)}
+                    className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Remove item"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </Card>
+            );
+          })}
+
+          <div className="flex justify-between items-center pt-2">
+            <Button variant="ghost" size="sm" onClick={clearCart} className="text-slate-500 hover:text-red-600">
+              Clear Shopping Bag
+            </Button>
+            <Link to="/shop">
+              <Button variant="outline" size="sm">
+                Continue Shopping
+              </Button>
+            </Link>
           </div>
-        )}
+        </div>
+
+        {/* Order Summary Side Card */}
+        <div>
+          <Card className="p-6 space-y-6 sticky top-24">
+            <h2 className="text-xl font-bold text-slate-900 pb-4 border-b border-slate-100">
+              Order Summary
+            </h2>
+
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between text-slate-600">
+                <span>Subtotal</span>
+                <span className="font-semibold text-slate-900">RS. {subtotal.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-slate-600">
+                <span>Shipping</span>
+                <span className="font-semibold text-slate-900">
+                  {shippingCost === 0 ? <span className="text-emerald-600">FREE</span> : `RS. ${shippingCost}`}
+                </span>
+              </div>
+              {subtotal < shippingThreshold && (
+                <p className="text-[11px] text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200">
+                  Add RS. {(shippingThreshold - subtotal).toLocaleString()} more to qualify for FREE Shipping!
+                </p>
+              )}
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 flex justify-between items-baseline">
+              <span className="text-base font-bold text-slate-900">Total</span>
+              <span className="text-2xl font-black text-slate-900">RS. {total.toLocaleString()}</span>
+            </div>
+
+            <Button
+              size="lg"
+              onClick={() => navigate("/checkout")}
+              className="w-full shadow-lg shadow-blue-600/20"
+            >
+              <span>Proceed to Checkout</span>
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Card>
+        </div>
       </div>
     </div>
   );
-};
-
-export default Cart;
+}

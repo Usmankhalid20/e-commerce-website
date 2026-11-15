@@ -1,8 +1,9 @@
 import ProfileInformation from './ProfileInformation';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuthStore } from "../../../store/useAuthStore";
+
 
 const ProfileUpdate = () => {
-  const { updatedUserProfile, authUser } = useAuth();
+  const { updateProfile, authUser } = useAuthStore();
   // const [currentUser, setCurrentUser] = useState({
   //   fullName: 'John Doe',
   //   email: 'john.doe@example.com',
@@ -24,7 +25,7 @@ const ProfileUpdate = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ProfileInformation
           user={authUser} 
-          onUpdate={updatedUserProfile} 
+          onUpdate={updateProfile} 
         />
       </div>
     </div>

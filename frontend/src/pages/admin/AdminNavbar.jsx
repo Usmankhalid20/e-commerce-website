@@ -1,11 +1,12 @@
 // import { Link } from "react-router-dom";
 // import { FiLogOut, FiMenu, FiX } from "react-icons/fi";
-// import { useAuth } from "../../../context/AuthContext";
+// import { useAuthStore } from "../../store/useAuthStore";
+
 import AdminProfile from "./AdminProfile";
 // import { useState } from "react";
 
 // export default function AdminNavbar() {
-//   const { role } = useAuth();
+//   const { role } = useAuthStore();
 //   const [isOpen, setIsOpen] = useState(false);
 
 //   return (

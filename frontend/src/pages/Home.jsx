@@ -1,238 +1,231 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import MainCards from '../components/common/Cards/MainCards';
-import { ArrowRight, Truck, ShieldCheck, RefreshCw, Star, Tag, Heart, Plus, Minus, ChevronDown, ChevronUp } from 'lucide-react';
-import Button from '../components/ui/Button';
-import Section from '../components/ui/Section';
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Sparkles, ArrowRight, ShieldCheck, Leaf, Award, Truck, ShoppingBag } from "lucide-react";
+import { useProductStore } from "../store/useProductStore";
+import { useCartStore } from "../store/useCartStore";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
+import Skeleton from "../components/ui/Skeleton";
 
-const HomePage = () => {
+export default function Home() {
+  const { products, fetchProducts, isLoading } = useProductStore();
+  const { addToCart } = useCartStore();
+
+  useEffect(() => {
+    fetchProducts({ limit: 6 });
+  }, [fetchProducts]);
+
+  const categories = [
+    { title: "Cleansers", name: "cleanser", image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=800&auto=format&fit=crop" },
+    { title: "Serums", name: "serum", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=800&auto=format&fit=crop" },
+    { title: "Moisturizers", name: "moisturizer", image: "https://images.unsplash.com/photo-1608248597262-838d76d49811?q=80&w=800&auto=format&fit=crop" },
+    { title: "Sun Protection", name: "sunscreen", image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=800&auto=format&fit=crop" },
+  ];
+
   return (
-    <>
+    <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-stone-50">
-        <div className="absolute inset-0 z-0">
-           <img
-              src="https://unsplash.com/photos/a-couple-of-bottles-of-liquid-sitting-on-top-of-a-bed-iZQDneG5KoY"
-              alt="Background"
-              className="w-full h-full object-cover opacity-5"
-            />
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            
-            {/* Text Content */}
-            <div className="max-w-xl animate-fade-in-up">
-              <span className="text-accent font-medium tracking-widest text-sm uppercase mb-4 block">
-                The New Standard in Skincare
-              </span>
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-medium tracking-tight text-primary mb-8 leading-[1.1]">
-                Restore Your Skin’s Natural Barrier
-              </h1>
-              
-              <p className="text-lg text-stone-600 mb-6 leading-relaxed max-w-lg">
-                Discover the clinical-grade serum designed to calm, hydrate, and protect sensitive skin. Formulated with dermatologists for visible results.
-              </p>
-
-              <p className="text-sm text-accent font-medium mb-10 block">
-                ✓ Dermatologist-tested &nbsp; • &nbsp; ✓ 30-day money-back guarantee
-              </p>
-              
-              <div className="flex flex-wrap gap-4">
-                <Link to="/shop" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-accent transition-colors">
-                  Shop Skincare <ArrowRight size={16} />
-                </Link>
-                <Link to="/#ingredients" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-accent transition-colors">
-                  See Ingredients <ArrowRight size={16} />
-                </Link>
-              </div>
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white py-20 lg:py-28 px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.15),transparent_50%)] pointer-events-none" />
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+          <div className="space-y-6 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 text-xs font-semibold uppercase tracking-wider">
+              <Sparkles className="w-4 h-4 text-blue-400" />
+              <span>Pure Skincare Perfection</span>
             </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+              Radiant Skin Starts With <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">One Drop</span>
+            </h1>
+            <p className="text-base sm:text-lg text-slate-300 max-w-xl mx-auto lg:mx-0 font-normal">
+              Formulated with dermatologist-backed organic botanical extracts. Restore hydration, nourish your barrier, and unlock natural radiance.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              <Link to="/shop">
+                <Button size="lg" className="w-full sm:w-auto shadow-lg shadow-blue-600/30">
+                  <span>Explore Catalog</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
+              <Link to="/about">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto text-slate-200 border-slate-700 hover:bg-slate-800 hover:text-white">
+                  Learn Our Science
+                </Button>
+              </Link>
+            </div>
+          </div>
 
-            {/* Hero Image */}
-            <div className="relative flex justify-center lg:justify-end">
-               <div className="relative z-10 w-full max-w-md">
-                 <div className="absolute -inset-4 bg-accent/10 rounded-full blur-3xl"></div>
-                 <img
-                    src="https://images.unsplash.com/photo-1643747394944-89b11e7fb616?q=80&w=1228&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="OneDrop Skincare Model"
-                    className="relative rounded-t-[10rem] rounded-b-[2rem] shadow-2xl object-cover aspect-[3/4] w-full"
-                  />
-               </div>
+          <div className="relative flex justify-center">
+            <div className="relative w-full max-w-md aspect-4/5 rounded-3xl overflow-hidden shadow-2xl border border-slate-700/50">
+              <img
+                src="https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1200&auto=format&fit=crop"
+                alt="OneDrop Skincare Botanical Hero"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
+                <div className="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-slate-700/60 w-full">
+                  <p className="text-xs text-blue-400 font-semibold uppercase tracking-wider">Featured Release</p>
+                  <p className="text-sm font-bold text-white mt-0.5">Hydra-Restore Botanical Elixir</p>
+                  <p className="text-xs text-slate-300 mt-1">100% Organic Hyaluronic Acid + Niacinamide Complex</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Benefits Strip */}
-      <div className="bg-primary text-white py-12 border-b border-stone-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8 text-center md:text-left divide-y md:divide-y-0 md:divide-x divide-white/10">
-            <div className="px-4 py-4 md:py-0">
-               <h3 className="font-serif text-xl mb-2 flex items-center justify-center md:justify-start gap-2">
-                 <Truck className="w-5 h-5 text-accent-light" /> Fast Shipping
-               </h3>
-               <p className="text-stone-300 text-sm">Free express shipping on all orders over $100.</p>
+      {/* Trust Badges */}
+      <section className="bg-white border-y border-slate-200 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="flex items-center gap-3.5 p-2">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5" />
             </div>
-            <div className="px-4 py-4 md:py-0">
-               <h3 className="font-serif text-xl mb-2 flex items-center justify-center md:justify-start gap-2">
-                 <ShieldCheck className="w-5 h-5 text-accent-light" /> Secure Payment
-               </h3>
-               <p className="text-stone-300 text-sm">Encrypted payment gateways for your protection.</p>
-            </div>
-             <div className="px-4 py-4 md:py-0">
-               <h3 className="font-serif text-xl mb-2 flex items-center justify-center md:justify-start gap-2">
-                 <RefreshCw className="w-5 h-5 text-accent-light" /> Easy Returns
-               </h3>
-               <p className="text-stone-300 text-sm">Try it risk-free. Return if not satisfied.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Showcase Section */}
-      <Section className="bg-white">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="order-2 lg:order-1 relative">
-               <img 
-                 src="https://images.unsplash.com/photo-1696025522422-aa9a74e4f3d5?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                 alt="Radiant Skin Collection" 
-                 className="rounded-lg shadow-xl w-full h-auto"
-               />
-               <div className="absolute -bottom-6 -right-6 bg-cream p-8 rounded-lg shadow-lg hidden md:block max-w-xs">
-                 <p className="font-serif text-2xl text-primary mb-2">"Pure & Potent"</p>
-                 <div className="flex text-accent">
-                   {[1,2,3,4,5].map(i => <Star key={i} size={16} fill="currentColor" />)}
-                 </div>
-               </div>
-            </div>
-            <div className="order-1 lg:order-2">
-              <span className="text-accent font-medium tracking-widest text-sm uppercase mb-4 block">
-                Pure Formulations
-              </span>
-              <h2 className="text-4xl font-serif font-medium text-primary mb-6">Clean skincare for a healthy glow</h2>
-              <p className="text-stone-600 mb-10 leading-relaxed text-lg">
-                We believe in skincare that is effective and safe. Our ingredients are ethically sourced, minimal, and scientifically proven to repair your barrier.
-              </p>
-              
-              <div className="grid grid-cols-2 gap-8 mb-10">
-                <div className="border-l-2 border-accent pl-6">
-                  <span className="text-5xl font-serif text-primary block mb-2">100%</span>
-                  <span className="text-sm text-stone-500 uppercase tracking-wide">Clean Ingredients</span>
-                </div>
-                <div className="border-l-2 border-accent pl-6">
-                  <span className="text-5xl font-serif text-primary block mb-2">Zero</span>
-                  <span className="text-sm text-stone-500 uppercase tracking-wide">Cruelty Free</span>
-                </div>
-              </div>
-              
-              <Button to="/about" variant="outline">Our Philosophy</Button>
-            </div>
-          </div>
-      </Section>
-
-      {/* Why Choose Us */}
-      <Section className="bg-stone-50">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-4xl font-serif font-medium text-primary mb-4">Why Choose OneDrop</h2>
-            <p className="text-stone-600">Experience the difference with our clinical approach to daily skincare.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-             {[
-               { icon: Star, title: "Clinical Formulations", desc: "Developed with dermatologists to ensure maximum safety and efficacy for all skin types." },
-               { icon: Tag, title: "Potent Actives", desc: "High concentrations of active ingredients that deliver real, visible change to your skin." },
-               { icon: Heart, title: "Visible Results", desc: "Join thousands of users who have seen healthier, more radiant skin in just weeks." }
-             ].map((item, idx) => (
-               <div key={idx} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-stone-100">
-                 <div className="w-12 h-12 bg-cream rounded-full flex items-center justify-center mb-6 text-accent">
-                   <item.icon size={24} />
-                 </div>
-                 <h3 className="text-xl font-serif font-medium text-primary mb-3">{item.title}</h3>
-                 <p className="text-stone-500 leading-relaxed">{item.desc}</p>
-               </div>
-             ))}
-          </div>
-      </Section>
-
-      {/* Featured Products */}
-      <Section className="bg-white border-t border-stone-100">
-          <div className="flex justify-between items-end mb-12">
             <div>
-              <h2 className="text-4xl font-serif font-medium text-primary mb-4">Featured Collection</h2>
-              <p className="text-stone-600 max-w-xl">
-                Curated solutions for your skin's unique needs.
-              </p>
+              <h4 className="text-xs font-bold text-slate-900 uppercase">Derm Approved</h4>
+              <p className="text-xs text-slate-500">Clinical Formulation</p>
             </div>
-            <Link to="/shop" className="hidden md:flex items-center text-accent hover:text-primary transition-colors font-medium">
-              View All <ArrowRight size={16} className="ml-2" />
+          </div>
+
+          <div className="flex items-center gap-3.5 p-2">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <Leaf className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-slate-900 uppercase">100% Organic</h4>
+              <p className="text-xs text-slate-500">Sustainably Sourced</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3.5 p-2">
+            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+              <Award className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-slate-900 uppercase">Cruelty Free</h4>
+              <p className="text-xs text-slate-500">Never Tested on Animals</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3.5 p-2">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+              <Truck className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-slate-900 uppercase">Free Shipping</h4>
+              <p className="text-xs text-slate-500">On orders over RS. 10,000</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Categories */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Shop by Category</h2>
+            <p className="text-slate-500 text-sm mt-1">Explore targeted skincare routines designed for every skin type</p>
+          </div>
+          <Link to="/shop" className="text-blue-600 hover:text-blue-700 font-bold text-sm inline-flex items-center gap-1.5">
+            <span>View All Categories</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {categories.map((cat) => (
+            <Link key={cat.name} to={`/shop?category=${cat.name}`} className="group">
+              <Card hover className="overflow-hidden">
+                <div className="aspect-4/3 relative overflow-hidden bg-slate-100">
+                  <img
+                    src={cat.image}
+                    alt={cat.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent flex items-end p-4">
+                    <h3 className="text-lg font-bold text-white">{cat.title}</h3>
+                  </div>
+                </div>
+              </Card>
             </Link>
-          </div>
-          <MainCards />
-          <div className="mt-12 text-center md:hidden">
-             <Button to="/shop" variant="outline" className="w-full">View All</Button>
-          </div>
-      </Section>
-      
-      {/* FAQ Section */}
-      <Section className="bg-stone-50">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12">
-             <h2 className="text-3xl font-serif font-medium text-primary mb-4">Frequently Asked Questions</h2>
-          </div>
-          <div className="space-y-4">
-            <AccordionItem 
-              question="Is OneDrop suitable for sensitive skin?" 
-              answer="Yes, all our products are hypoallergenic and free from fragrance, alcohol, and harsh chemicals, making them perfect for sensitive skin." 
-            />
-            <AccordionItem 
-              question="How often should I use the serum?" 
-              answer="For best results, we recommend applying 2-3 drops twice daily, morning and night, after cleansing." 
-            />
-            <AccordionItem 
-              question="When will I see results?" 
-              answer="Most users report increased hydration immediately, with visible improvements in texture and tone within 2-4 weeks of consistent use." 
-            />
-             <AccordionItem 
-              question="Are your products cruelty-free?" 
-              answer="Absolutely. We never test on animals and are committed to 100% ethical sourcing standards for all our ingredients." 
-            />
-          </div>
+          ))}
         </div>
-      </Section>
+      </section>
 
-      {/* Sticky Mobile Buy Bar */}
-      <div className="fixed bottom-0 left-0 w-full bg-white border-t border-stone-200 p-4 md:hidden z-40 flex items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <div>
-           <p className="text-xs text-stone-500 uppercase tracking-wide">Daily Repair Serum</p>
-           <p className="font-serif font-bold text-primary">Available Now</p>
+      {/* Popular Products */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Popular Best-Sellers</h2>
+            <p className="text-slate-500 text-sm mt-1">Discover customer favorites crafted for glowing, healthy skin</p>
+          </div>
+          <Link to="/shop" className="text-blue-600 hover:text-blue-700 font-bold text-sm inline-flex items-center gap-1.5">
+            <span>Browse Full Catalog</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
-        <Button to="/shop" variant="primary" size="sm">
-          Shop Skincare
-        </Button>
-      </div>
-    </>
-  );
-};
 
-const AccordionItem = ({ question, answer }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  
-  return (
-    <div className="bg-white rounded-lg border border-stone-200 overflow-hidden">
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-stone-50 transition-colors"
-      >
-        <span className="font-medium text-primary">{question}</span>
-        {isOpen ? <ChevronUp size={18} className="text-stone-400" /> : <ChevronDown size={18} className="text-stone-400" />}
-      </button>
-      <div 
-        className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-40 py-4 opacity-100' : 'max-h-0 py-0 opacity-0'}`}
-      >
-        <p className="text-stone-600 text-sm leading-relaxed">{answer}</p>
-      </div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="p-4 space-y-4">
+                <Skeleton className="aspect-square w-full" />
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.slice(0, 6).map((product) => (
+              <Card key={product._id} hover className="flex flex-col overflow-hidden">
+                <Link to={`/product/${product._id}`} className="aspect-square bg-slate-100 relative overflow-hidden group">
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {product.discount > 0 && (
+                    <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-md">
+                      -{product.discount}%
+                    </span>
+                  )}
+                </Link>
+                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                      {product.category}
+                    </span>
+                    <Link to={`/product/${product._id}`}>
+                      <h3 className="text-base font-bold text-slate-900 mt-2 hover:text-blue-600 transition-colors line-clamp-1">
+                        {product.title}
+                      </h3>
+                    </Link>
+                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">{product.description}</p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                    <div>
+                      <span className="text-lg font-extrabold text-slate-900">RS. {product.price?.toLocaleString()}</span>
+                      {product.mrp > product.price && (
+                        <span className="text-xs text-slate-400 line-through ml-2">RS. {product.mrp?.toLocaleString()}</span>
+                      )}
+                    </div>
+
+                    <Button
+                      size="sm"
+                      onClick={() => addToCart(product, 1)}
+                      className="gap-1.5 shadow-xs"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      <span>Add</span>
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
-};
-
-export default HomePage;
+}

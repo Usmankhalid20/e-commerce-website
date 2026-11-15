@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuthStore } from "../../store/useAuthStore";
+
 import { FiLogOut } from "react-icons/fi";
 
 const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
-  const { authUser, role, Logout } = useAuth(); // ✅ role added
+  const { authUser, role, logout } = useAuthStore(); // ✅ role added
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -54,13 +55,13 @@ const UserDropdown = () => {
             </li>
           </ul>
 
-          {/* Logout */}
+          {/* logout */}
           <div className="py-2 px-4">
             <button
-              onClick={Logout}
+              onClick={logout}
               className="flex items-center gap-2 w-full bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm justify-center"
             >
-              <FiLogOut /> Logout
+              <FiLogOut /> logout
             </button>
           </div>
         </div>
